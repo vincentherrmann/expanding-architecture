@@ -114,8 +114,8 @@ class Conv1dExtendable(nn.Conv1d):
         split_positions = torch.zeros(self.in_channels, self.kernel_size[0]).uniform_(-stdv, stdv) + 0.5  # uniform distributin with mean 0.5 and expected absolute value of 1
         #split_positions = 2 * torch.rand(self.in_channels, self.kernel_size[0])
         slice = original_weight[channel_number, :, :]
-        original_weight[channel_number, :, :] = slice * split_positions
-        slice = slice * (stdv - split_positions)
+        original_weight[channel_number, :, :] = slice# * split_positions
+        #slice = slice * (stdv - split_positions)
         new_weight = insert_slice(original_weight, slice, dim=0, at_index=channel_number+1)
 
         if self.bias is not None:
@@ -159,9 +159,14 @@ class Conv1dExtendable(nn.Conv1d):
 
         self.in_channels += 1
         original_weight = self.weight.data
-        duplicated_slice = original_weight[:, channel_number, :]
-        original_weight[: ,channel_number, :] = duplicated_slice
-        new_weight = insert_slice(original_weight, duplicated_slice, dim=1, at_index=channel_number+1)
+        stdv = 1.5
+        split_positions = torch.zeros(self.out_channels, self.kernel_size[0]).uniform_(-stdv, stdv) + 0.5  # uniform distributin with mean 0.5 and expected absolute value of 1
+        duplicated_slice = original_weight[:, channel_number, :].clone()
+        original_weight[: ,channel_number, :] = duplicated_slice * split_positions
+        new_weight = insert_slice(original_weight,
+                                  duplicated_slice * (stdv - split_positions - 0.5),
+                                  dim=1,
+                                  at_index=channel_number+1)
 
         self.weight = Parameter(new_weight)
 
