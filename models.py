@@ -9,7 +9,7 @@ from expanding_modules import Conv1dExtendable, Conv2dExtendable
 from logger import Logger
 
 class FC_Net(nn.Module):
-    def __init__(self, layer_sizes=[784, 4, 4, 4, 10]):
+    def __init__(self, layer_sizes=[784, 4, 4, 4, 10], logger=None):
         # default channel counts: 1-10-20 320-50-10
         super(FC_Net, self).__init__()
         # self.fc1 = Conv1dExtendable(784, 32, kernel_size=1, bias=False)
@@ -40,8 +40,9 @@ class FC_Net(nn.Module):
         for idx in range(len(layer_sizes) - 2):
             dict["fc"+str(idx)].input_tied_modules = [dict["fc"+str(idx+1)]]
 
-
         self.seq = nn.Sequential(dict)
+        self.logger = logger
+        self.layer_count = len(layer_sizes) - 1
 
     def forward(self, x):
         x = x.view(-1, 28*28, 1)
@@ -53,11 +54,12 @@ class FC_Net(nn.Module):
         s = sum([np.prod(list(d.size())) for d in par])
         return s
 
-    def log_to_tensor_board(self, batch_idx, loss):
+    def log_to_tensor_board(self, batch_idx, loss, correct_results):
         # TensorBoard logging
 
         # loss
         self.logger.scalar_summary("loss", loss, batch_idx)
+        self.logger.scalar_summary("correct results", correct_results, batch_idx)
 
         # validation loss
         # validation_position = self.validation_result_positions[-1]
@@ -80,4 +82,4 @@ class FC_Net(nn.Module):
             tag = tag.replace('.', '/')
             if type(module) is Conv1dExtendable:
                 ncc = module.normalized_cross_correlation()
-                self.logger.histo_summary(tag + '/ncc', ncc.data.cpu().numpy(), batch_idx)
+                self.logger.histo_summary(tag + '/ncc', ncc.cpu().numpy(), batch_idx)

@@ -18,16 +18,18 @@ class MNIST_Optimizer:
                  batch_size=64,
                  cuda=False,
                  extend_interval=0,
-                 log_interval=10,
+                 log_interval=0,
                  lr=0.01,
                  momentum=0.5,
+                 weight_decay=0,
                  extend_threshold=0.01,
                  prune_threshold=0.0001):
         self.model = model
         self.epochs = epochs
-        self.optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum)
+        self.optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
         self.lr = lr
         self.momentum = momentum
+        self.weight_decay = weight_decay
         self.cuda = cuda
         self.report_interval = report_interval
         self.log_interval = log_interval
@@ -48,6 +50,7 @@ class MNIST_Optimizer:
                 transforms.Normalize((0.1307,), (0.3081,))
             ])),
             batch_size=batch_size, shuffle=True)
+        self.allow_pruning = False
 
     def train(self):
         for epoch in range(1, self.epochs + 1):
@@ -65,12 +68,17 @@ class MNIST_Optimizer:
             loss = F.nll_loss(output, target)
             loss.backward()
 
-            if (self.extend_interval != 0) and (batch_idx % self.extend_interval == 0):
+            if self.log_interval != 0 and batch_idx % self.log_interval == 0:
+                test_loss, test_correct = self.test(epoch)
+                self.model.log_to_tensor_board(batch_idx + (epoch * len(self.train_loader.dataset) / self.train_loader.batch_size),
+                                               test_loss, test_correct)
+
+            if self.extend_interval != 0 and batch_idx % self.extend_interval == 0:
                 self.extend_and_prune(epoch)
 
             self.optimizer.step()
 
-            if batch_idx % self.log_interval == 0:
+            if batch_idx % self.report_interval == 0:
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch, batch_idx * len(data), len(self.train_loader.dataset),
                            100. * batch_idx / len(self.train_loader), loss.data[0]))
@@ -89,6 +97,13 @@ class MNIST_Optimizer:
 
         for name, module in self.model.named_modules():
             if type(module) is Conv1dExtendable:
+
+                # print large weights:
+                (max_val, max_idx) = torch.max(torch.abs(module.weight.view(-1)), dim=0)
+                if torch.max(max_val.data) > 2:
+                    idx = np.unravel_index(max_idx.data[0], module.weight.size())
+                    print("maximum weight at index ", idx, " with value ", max_val.data[0])
+
                 if len(module.output_tied_modules) > 0:
                     all_nccs = [module.current_ncc] + [m.current_ncc for m in module.output_tied_modules]
                     ncc_tensor = torch.abs(torch.stack(all_nccs))
@@ -101,30 +116,58 @@ class MNIST_Optimizer:
                 if module.fixed_feature_count:
                     continue
 
-                for feature_number, value in enumerate(ncc):
-                    weighted_value = value.data[0] / math.log(module.in_channels)
-                    if (abs(weighted_value) > self.extend_threshold) & (self.model.parameter_count() < 25000):
+                feature_number = 0
+                while feature_number < ncc.size(0):
+                    weighted_value = ncc[feature_number] / (math.sqrt(module.in_channels))
+                    #weighted_value = ncc[feature_number] / (math.log(module.in_channels)+1)
+                    if abs(weighted_value) > self.extend_threshold:
                         print("in ", name, ", split feature number ", feature_number + offset)
-                        module.split_feature(feature_number=feature_number + offset)
+                        ncc = module.split_feature(feature_number=feature_number + offset)
                         all_modules = [module] + module.output_tied_modules
                         [m.normalized_cross_correlation() for m in all_modules]
                         splitted = True
-                        offset += 1
-                    if (abs(weighted_value) < self.prune_threshold) & (weighted_value != 0):
+                        self.allow_pruning = True
+                        feature_number = 0
+                        continue
+                    if abs(weighted_value) < self.prune_threshold and weighted_value != 0 and self.allow_pruning:
                         if feature_number >= module.out_channels:
                             continue
                         print("in ", name, ", prune feature number ", feature_number)
-                        module.prune_feature(feature_number=feature_number + offset)
+                        ncc = module.prune_feature(feature_number=feature_number + offset)
                         all_modules = [module] + module.output_tied_modules
                         [m.normalized_cross_correlation() for m in all_modules]
                         splitted = True
-                        offset += -1
+                        feature_number = 0
+                        continue
+                    feature_number += 1
+
+                # for feature_number, value in enumerate(ncc):
+                #     weighted_value = value.data[0] / math.log(module.in_channels)
+                #     if (abs(weighted_value) > self.extend_threshold) & (self.model.parameter_count() < 25000):
+                #         print("in ", name, ", split feature number ", feature_number + offset)
+                #         module.split_feature(feature_number=feature_number + offset)
+                #         all_modules = [module] + module.output_tied_modules
+                #         [m.normalized_cross_correlation() for m in all_modules]
+                #         splitted = True
+                #         offset += 1
+                #     if (abs(weighted_value) < self.prune_threshold) & (weighted_value != 0):
+                #         if feature_number >= module.out_channels:
+                #             continue
+                #         print("in ", name, ", prune feature number ", feature_number)
+                #         module.prune_feature(feature_number=feature_number + offset)
+                #         all_modules = [module] + module.output_tied_modules
+                #         [m.normalized_cross_correlation() for m in all_modules]
+                #         splitted = True
+                #         offset += -1
 
         if splitted:
-            self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum)
+            self.optimizer = optim.SGD(self.model.parameters(),
+                                       lr=self.lr,
+                                       momentum=self.momentum,
+                                       weight_decay=self.weight_decay)
             print("new parameter count: ", self.model.parameter_count())
-            print("test result after expanding: ")
-            self.test(epoch)
+            # print("test result after expanding: ")
+            # self.test(epoch)
         else:
             print("No feature changed enough to split")
 
@@ -147,4 +190,4 @@ class MNIST_Optimizer:
             test_loss, correct, len(self.test_loader.dataset),
             100. * correct / len(self.test_loader.dataset)))
 
-        return test_loss
+        return test_loss, correct

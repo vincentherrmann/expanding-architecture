@@ -19,7 +19,7 @@ else:
     torch.save(model.state_dict(), file)
 
 print("initial test run:")
-orig_test_loss = trainer.test()
+orig_test_loss, correct = trainer.test()
 
 def expanding_sweep_most_important(expand_count):
     model = FC_Net(layer_sizes=[784, 32, 32, 32, 32, 10])
@@ -68,7 +68,7 @@ def expanding_sweep_least_important(expand_count):
                 print("in ", name, ", prune feature number ", feature_number, " with ncc ", sorted_val[i])
                 module.split_feature(feature_number=feature_number)
 
-        test_loss = trainer.test()
+        (test_loss, correct) = trainer.test()
         print("change of test loss: ", (test_loss/orig_test_loss))
         print("")
 

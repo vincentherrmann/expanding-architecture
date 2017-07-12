@@ -130,7 +130,7 @@ class Net(nn.Module):
             tag = tag.replace('.', '/')
             if type(module) is Conv1dExtendable:
                 ncc = module.normalized_cross_correlation()
-                self.logger.histo_summary(tag + '/ncc', ncc.data.cpu().numpy(), batch_idx)
+                self.logger.histo_summary(tag + '/ncc', ncc.cpu().numpy(), batch_idx)
 
 model = Net()
 if args.cuda:
@@ -155,7 +155,7 @@ def train(epoch, optimizer):
             print("test result before expanding: ")
             test(epoch)
 
-            #model.log_to_tensor_board(batch_idx, loss.data[0])
+            model.log_to_tensor_board(batch_idx, loss.data[0])
 
             for name, module in model.named_modules():
                 if type(module) is Conv1dExtendable:
@@ -178,7 +178,7 @@ def train(epoch, optimizer):
                         continue
 
                     for feature_number, value in enumerate(ncc):
-                        weighted_value = value.data[0] / math.log(module.in_channels)
+                        weighted_value = value / (math.log(module.in_channels)+1)
                         if (abs(weighted_value) > args.extend_threshold) & (model.parameter_count() < 25000):
                             print("in ", name, ", split feature number ", feature_number + offset)
                             module.split_feature(feature_number=feature_number + offset)

@@ -19,7 +19,7 @@ else:
     torch.save(model.state_dict(), file)
 
 print("initial test run:")
-orig_test_loss = trainer.test()
+orig_test_loss, correct = trainer.test()
 
 def sort_importance_by_ncc(module_name):
     module = model.seq.__getattr__(module_name)

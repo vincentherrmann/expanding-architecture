@@ -19,7 +19,7 @@ else:
     torch.save(model.state_dict(), file)
 
 print("initial test run:")
-orig_test_loss = trainer.test()
+orig_test_loss, correct = trainer.test()
 
 # trainer.extend_threshold = 10
 # trainer.prune_threshold = 0.12
@@ -94,7 +94,7 @@ def prune_least_important_features(prune_count):
         #     print("in ", name, ", prune feature number ", feature_number, " with ncc ", sorted_val[i])
         #     module.prune_feature(feature_number=feature_number)
 
-    test_loss = trainer.test()
+    test_loss, correct = trainer.test()
     print("change of test loss: ", (test_loss / orig_test_loss))
     print("")
 
@@ -165,7 +165,7 @@ def pruning_sweep_least_important(prune_count):
                 print("in ", name, ", prune feature number ", feature_number, " with ncc ", sorted_val[i])
                 module.prune_feature(feature_number=feature_number)
 
-        test_loss = trainer.test()
+        test_loss, correct = trainer.test()
         print("change of test loss: ", (test_loss/orig_test_loss))
         print("")
 

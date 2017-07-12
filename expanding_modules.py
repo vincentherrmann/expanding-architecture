@@ -12,14 +12,10 @@ class Conv1dExtendable(nn.Conv1d):
         self.output_tied_modules = [] # modules whose output size has to be compatible this this modules output
         self.current_ncc = None
         self.fixed_feature_count=fixed_feature_count
-        #self.feature_lookup = list(range(self.out_channels))
 
     def init_ncc(self):
         self.register_buffer("t0_weight", self.weight.data.clone())
         self.register_buffer("start_ncc", torch.zeros(self.out_channels))
-        #self.t0_weight = self.weight.clone()
-
-        #self.start_ncc = Variable(torch.zeros(self.out_channels))
         self.start_ncc = self.normalized_cross_correlation()
 
     def normalized_cross_correlation(self):
@@ -41,14 +37,13 @@ class Conv1dExtendable(nn.Conv1d):
         mean = torch.mean(w, dim=1).expand_as(w)
         t_factor = w - mean
         h_product = t0_factor * t_factor
-        covariance = torch.sum(h_product, dim=1) #/ (w.size(1)-1)
+        covariance = torch.sum(h_product, dim=1)
 
         denominator = t0_norm * t_norm + 0.05 # add a relatively small constant to avoid uncontrolled expansion for small weights
 
         ncc = covariance / denominator
         ncc = (ncc - self.start_ncc).squeeze()
         self.current_ncc = ncc
-        #self.feature_lookup = list(range(self.out_channels))
 
         return ncc
 
@@ -62,33 +57,24 @@ class Conv1dExtendable(nn.Conv1d):
         if self.fixed_feature_count:
             return self.current_ncc
 
-        #in_channel_number = self.feature_lookup.index(feature_number)
-
         new_ncc = self._split_output_channel(channel_number=feature_number)
         for dep in self.input_tied_modules:
             dep._split_input_channel(channel_number=feature_number)
         for dep in self.output_tied_modules:
             dep._split_output_channel(channel_number=feature_number)
 
-        #self.feature_lookup.insert(feature_number+1, -1)
         return new_ncc
-
 
     def prune_feature(self, feature_number):
         if self.fixed_feature_count:
             return self.current_ncc
-
-        #in_channel_number = self.feature_lookup.index(feature_number)
-
         new_ncc = self.prune_output_channel(channel_number=feature_number)
         for dep in self.input_tied_modules:
             dep.prune_input_channel(channel_number=feature_number)
         for dep in self.output_tied_modules:
             dep.prune_output_channel(channel_number=feature_number)
 
-        #self.feature_lookup.remove(feature_number)
         return new_ncc
-
 
     def split_features(self, threshold):
         ncc = self.normalized_cross_correlation()
@@ -109,13 +95,8 @@ class Conv1dExtendable(nn.Conv1d):
         self.out_channels += 1
 
         original_weight = self.weight.data
-        #stdv = 1.86603
-        stdv = 0.5
-        split_positions = torch.zeros(self.in_channels, self.kernel_size[0]).uniform_(-stdv, stdv) + 0.5  # uniform distributin with mean 0.5 and expected absolute value of 1
-        #split_positions = 2 * torch.rand(self.in_channels, self.kernel_size[0])
         slice = original_weight[channel_number, :, :]
-        original_weight[channel_number, :, :] = slice# * split_positions
-        #slice = slice * (stdv - split_positions)
+        original_weight[channel_number, :, :] = slice
         new_weight = insert_slice(original_weight, slice, dim=0, at_index=channel_number+1)
 
         if self.bias is not None:
@@ -136,8 +117,6 @@ class Conv1dExtendable(nn.Conv1d):
         return self.normalized_cross_correlation()
 
     def prune_output_channel(self, channel_number):
-        #channel_number = self.feature_lookup.index(channel_number)
-
         self.out_channels -= 1
         new_weight = remove_slice(self.weight.data, dim=0, at_index=channel_number)
         self.weight = Parameter(new_weight)
@@ -159,9 +138,15 @@ class Conv1dExtendable(nn.Conv1d):
 
         self.in_channels += 1
         original_weight = self.weight.data
+        # stdv = 1.86603
         stdv = 1.5
-        split_positions = torch.zeros(self.out_channels, self.kernel_size[0]).uniform_(-stdv, stdv) + 0.5  # uniform distributin with mean 0.5 and expected absolute value of 1
         duplicated_slice = original_weight[:, channel_number, :].clone()
+        sorted, s_indices = torch.sort(duplicated_slice, dim=0)
+        random_values, _ = torch.sort(torch.zeros(self.out_channels, self.kernel_size[0]).uniform_(-stdv, stdv), dim=0)
+
+
+        split_positions = torch.zeros(self.out_channels, self.kernel_size[0]).uniform_(-stdv, stdv) + 0.5  # uniform distributin with mean 0.5 and expected absolute value of 1
+
         original_weight[: ,channel_number, :] = duplicated_slice * split_positions
         new_weight = insert_slice(original_weight,
                                   duplicated_slice * (stdv - split_positions - 0.5),
@@ -188,6 +173,7 @@ class Conv1dExtendable(nn.Conv1d):
 
     def forward(self, input):
         return nn.Conv1d.forward(self, input)
+
 
 class Conv2dExtendable(nn.Conv2d):
     def __init__(self, *args, **kwargs):
