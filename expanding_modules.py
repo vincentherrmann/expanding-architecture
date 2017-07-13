@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import Parameter
 from torch.autograd import Variable, Function
+from scipy.stats import rankdata
 
 class Conv1dExtendable(nn.Conv1d):
     def __init__(self, *args, fixed_feature_count=False, **kwargs):
@@ -96,7 +97,7 @@ class Conv1dExtendable(nn.Conv1d):
 
         original_weight = self.weight.data
         slice = original_weight[channel_number, :, :]
-        original_weight[channel_number, :, :] = slice
+        #original_weight[channel_number, :, :] = slice
         new_weight = insert_slice(original_weight, slice, dim=0, at_index=channel_number+1)
 
         if self.bias is not None:
@@ -139,17 +140,26 @@ class Conv1dExtendable(nn.Conv1d):
         self.in_channels += 1
         original_weight = self.weight.data
         # stdv = 1.86603
-        stdv = 1.5
+        # stdv = 1.5
+
         duplicated_slice = original_weight[:, channel_number, :].clone()
-        sorted, s_indices = torch.sort(duplicated_slice, dim=0)
-        random_values, _ = torch.sort(torch.zeros(self.out_channels, self.kernel_size[0]).uniform_(-stdv, stdv), dim=0)
+        #sorted, s_indices = torch.sort(torch.abs(duplicated_slice), dim=0, descending=True)
+        ranks = torch.from_numpy(rankdata(torch.abs(duplicated_slice).numpy(), 'ordinal')).float()
+        split_positions = ((len(ranks) - ranks.view_as(duplicated_slice)) / len(ranks)) * 2.5 #2.618
+        split_positions += torch.zeros(duplicated_slice.size()).uniform_(-0.1, 0.1)
+        split_tensor = torch.stack([split_positions, (1-split_positions)], dim=2)
+        noise_idx = torch.ByteTensor(self.out_channels, self.kernel_size[0], 1).bernoulli_(0.5).long()
+        split1 = torch.gather(split_tensor, dim=2, index=noise_idx)
+        split2 = torch.gather(split_tensor, dim=2, index=1-noise_idx)
 
+        #random_values, _ = torch.sort(torch.zeros(self.out_channels, self.kernel_size[0]).uniform_(-stdv, stdv), dim=0)
+        #split_positions = torch.zeros(self.out_channels, self.kernel_size[0]).uniform_(-stdv, stdv) + 0.5  # uniform distributin with mean 0.5 and expected absolute value of 1
 
-        split_positions = torch.zeros(self.out_channels, self.kernel_size[0]).uniform_(-stdv, stdv) + 0.5  # uniform distributin with mean 0.5 and expected absolute value of 1
-
-        original_weight[: ,channel_number, :] = duplicated_slice * split_positions
+        slice1 = duplicated_slice * split1
+        slice2 = duplicated_slice * split2
+        original_weight[:, channel_number, :] = slice1
         new_weight = insert_slice(original_weight,
-                                  duplicated_slice * (stdv - split_positions - 0.5),
+                                  slice2,
                                   dim=1,
                                   at_index=channel_number+1)
 
@@ -172,7 +182,9 @@ class Conv1dExtendable(nn.Conv1d):
         return self.normalized_cross_correlation()
 
     def forward(self, input):
-        return nn.Conv1d.forward(self, input)
+        x = nn.Conv1d.forward(self, input)
+        #print("out: ", x)
+        return x
 
 
 class Conv2dExtendable(nn.Conv2d):

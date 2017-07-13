@@ -26,7 +26,8 @@ class MNIST_Optimizer:
                  prune_threshold=0.0001):
         self.model = model
         self.epochs = epochs
-        self.optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
+        self.optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+        #self.optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
         self.lr = lr
         self.momentum = momentum
         self.weight_decay = weight_decay
@@ -118,8 +119,9 @@ class MNIST_Optimizer:
 
                 feature_number = 0
                 while feature_number < ncc.size(0):
-                    weighted_value = ncc[feature_number] / (math.sqrt(module.in_channels))
+                    #weighted_value = ncc[feature_number] / (math.sqrt(module.in_channels))
                     #weighted_value = ncc[feature_number] / (math.log(module.in_channels)+1)
+                    weighted_value = ncc[feature_number]
                     if abs(weighted_value) > self.extend_threshold:
                         print("in ", name, ", split feature number ", feature_number + offset)
                         ncc = module.split_feature(feature_number=feature_number + offset)
@@ -141,30 +143,12 @@ class MNIST_Optimizer:
                         continue
                     feature_number += 1
 
-                # for feature_number, value in enumerate(ncc):
-                #     weighted_value = value.data[0] / math.log(module.in_channels)
-                #     if (abs(weighted_value) > self.extend_threshold) & (self.model.parameter_count() < 25000):
-                #         print("in ", name, ", split feature number ", feature_number + offset)
-                #         module.split_feature(feature_number=feature_number + offset)
-                #         all_modules = [module] + module.output_tied_modules
-                #         [m.normalized_cross_correlation() for m in all_modules]
-                #         splitted = True
-                #         offset += 1
-                #     if (abs(weighted_value) < self.prune_threshold) & (weighted_value != 0):
-                #         if feature_number >= module.out_channels:
-                #             continue
-                #         print("in ", name, ", prune feature number ", feature_number)
-                #         module.prune_feature(feature_number=feature_number + offset)
-                #         all_modules = [module] + module.output_tied_modules
-                #         [m.normalized_cross_correlation() for m in all_modules]
-                #         splitted = True
-                #         offset += -1
-
         if splitted:
-            self.optimizer = optim.SGD(self.model.parameters(),
-                                       lr=self.lr,
-                                       momentum=self.momentum,
-                                       weight_decay=self.weight_decay)
+            # self.optimizer = optim.SGD(self.model.parameters(),
+            #                            lr=self.lr,
+            #                            momentum=self.momentum,
+            #                            weight_decay=self.weight_decay)
+            self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
             print("new parameter count: ", self.model.parameter_count())
             # print("test result after expanding: ")
             # self.test(epoch)

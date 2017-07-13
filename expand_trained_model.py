@@ -39,10 +39,10 @@ def expanding_sweep_most_important(expand_count):
             (sorted_val, sorted_idx) = torch.sort(torch.abs(ncc), dim=0, descending=True)
             feature_numbers = sorted_idx[0:1]
             for i, feature_number in enumerate(feature_numbers):
-                print("in ", name, ", prune feature number ", feature_number, " with ncc ", sorted_val[i])
+                print("in ", name, ", split feature number ", feature_number, " with ncc ", sorted_val[i])
                 module.split_feature(feature_number=feature_number)
 
-        test_loss = trainer.test()
+        test_loss, correct = trainer.test()
         print("change of test loss: ", (test_loss/orig_test_loss))
         print("")
 
@@ -65,7 +65,7 @@ def expanding_sweep_least_important(expand_count):
             (sorted_val, sorted_idx) = torch.sort(torch.abs(ncc), dim=0, descending=False)
             feature_numbers = sorted_idx[0:1]
             for i, feature_number in enumerate(feature_numbers):
-                print("in ", name, ", prune feature number ", feature_number, " with ncc ", sorted_val[i])
+                print("in ", name, ", split feature number ", feature_number, " with ncc ", sorted_val[i])
                 module.split_feature(feature_number=feature_number)
 
         (test_loss, correct) = trainer.test()
@@ -73,5 +73,5 @@ def expanding_sweep_least_important(expand_count):
         print("")
 
 
-expanding_sweep_least_important(10)
+#expanding_sweep_least_important(10)
 expanding_sweep_most_important(10)
