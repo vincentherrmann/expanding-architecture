@@ -23,7 +23,9 @@ class MNIST_Optimizer:
                  momentum=0.5,
                  weight_decay=0,
                  extend_threshold=0.01,
-                 prune_threshold=0.0001):
+                 prune_threshold=0.0001,
+                 extension_rate=0,
+                 pruning_rate=0):
         self.model = model
         self.epochs = epochs
         self.optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
@@ -37,6 +39,8 @@ class MNIST_Optimizer:
         self.extend_interval = extend_interval
         self.extend_threshold = extend_threshold
         self.prune_threshold = prune_threshold
+        self.extension_rate = extension_rate
+        self.pruning_rate = pruning_rate
         self.train_loader = torch.utils.data.DataLoader(
             datasets.MNIST('../data', train=True, download=True,
                            transform=transforms.Compose([
@@ -52,6 +56,7 @@ class MNIST_Optimizer:
             ])),
             batch_size=batch_size, shuffle=True)
         self.allow_pruning = False
+        self.splitted_ncc_avg = 0
 
     def train(self):
         for epoch in range(1, self.epochs + 1):
@@ -60,7 +65,9 @@ class MNIST_Optimizer:
 
     def _train_one_epoch(self, epoch):
         self.model.train()
+        offset = int((epoch-1) * len(self.train_loader.dataset) / self.train_loader.batch_size)
         for batch_idx, (data, target) in enumerate(self.train_loader):
+            idx = batch_idx + offset
             if self.cuda:
                 data, target = data.cuda(), target.cuda()
             data, target = Variable(data), Variable(target)
@@ -69,20 +76,94 @@ class MNIST_Optimizer:
             loss = F.nll_loss(output, target)
             loss.backward()
 
-            if self.log_interval != 0 and batch_idx % self.log_interval == 0:
+            if self.log_interval != 0 and idx % self.log_interval == 0:
                 test_loss, test_correct = self.test(epoch)
-                self.model.log_to_tensor_board(batch_idx + (epoch * len(self.train_loader.dataset) / self.train_loader.batch_size),
-                                               test_loss, test_correct)
+                self.model.log_to_tensor_board(idx,
+                                               test_loss, test_correct, self.splitted_ncc_avg)
+                self.model.train()
 
-            if self.extend_interval != 0 and batch_idx % self.extend_interval == 0:
-                self.extend_and_prune(epoch)
+            if self.extend_interval != 0 and idx % self.extend_interval == 0:
+                #self.extend_and_prune(epoch)
+                self.prune_n_features(self.pruning_rate)
+                self.extend_n_features(self.extension_rate)
 
             self.optimizer.step()
 
-            if batch_idx % self.report_interval == 0:
+            if idx % self.report_interval == 0:
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch, batch_idx * len(data), len(self.train_loader.dataset),
                            100. * batch_idx / len(self.train_loader), loss.data[0]))
+
+    def prune_n_features(self, n):
+        for name, module in self.model.named_modules():
+            if type(module) is Conv1dExtendable or type(module) is Conv2dExtendable:
+                ncc = module.normalized_cross_correlation()
+
+        for _ in range(n):
+            min_module = None
+            min_name = ""
+            min_val = 1000
+            min_idx = 0
+            ncc_avg = 0
+            for name, module in self.model.named_modules():
+                if type(module) is not Conv1dExtendable and type(module) is not Conv2dExtendable:
+                    continue
+
+                if module.fixed_feature_count:
+                    continue
+
+                this_val, this_idx = torch.min(torch.abs(module.current_ncc), 0)  # prune least important features
+                if this_val[0] == 0:
+                    continue
+                if this_val[0] < min_val:
+                    min_val = this_val[0]
+                    min_idx = this_idx[0]
+                    min_module = module
+                    min_name = name
+            if min_module is not None:
+                min_module.prune_feature(feature_number=min_idx)
+                print("in ", min_name, ", prune feature number ", min_idx, " with ncc ", min_val)
+                ncc_avg += min_val
+
+        self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        self.splitted_ncc_avg = ncc_avg / n
+
+    def extend_n_features(self, n):
+        for name, module in self.model.named_modules():
+            if type(module) is Conv1dExtendable or type(module) is Conv2dExtendable:
+                ncc = module.normalized_cross_correlation()
+
+        for _ in range(n):
+            max_module = None
+            max_name = ""
+            max_val = 0
+            #max_val = 100
+            max_idx = 0
+            ncc_avg = 0
+            for name, module in self.model.named_modules():
+                if type(module) is not Conv1dExtendable and type(module) is not Conv2dExtendable:
+                    continue
+
+                if module.fixed_feature_count:
+                    continue
+
+                this_val, this_idx = torch.max(torch.abs(module.current_ncc), 0) # extend most important features
+                #this_val, this_idx = torch.min(torch.abs(module.current_ncc), 0)  # extend most important features
+                #this_val, this_idx = torch.max(torch.rand(module.out_channels), 0) # extend random feature
+                if this_val[0] > max_val:
+                #if this_val[0] < max_val:
+                    max_val = this_val[0]
+                    max_idx = this_idx[0]
+                    max_module = module
+                    max_name = name
+            if max_module is not None:
+                max_module.split_feature(feature_number=max_idx)
+                print("in ", max_name, ", split feature number ", max_idx, " with ncc ", max_val)
+                ncc_avg += max_val
+
+        print("new parameter count: ", self.model.parameter_count())
+        self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        self.splitted_ncc_avg = ncc_avg / n
 
     def extend_and_prune(self, epoch):
         #print("test result before expanding: ")
@@ -123,7 +204,7 @@ class MNIST_Optimizer:
                     #weighted_value = ncc[feature_number] / (math.log(module.in_channels)+1)
                     weighted_value = ncc[feature_number]
                     if abs(weighted_value) > self.extend_threshold:
-                        print("in ", name, ", split feature number ", feature_number + offset)
+                        print("in ", name, ", split feature number ", feature_number + offset, ", ncc: ", weighted_value)
                         ncc = module.split_feature(feature_number=feature_number + offset)
                         all_modules = [module] + module.output_tied_modules
                         [m.normalized_cross_correlation() for m in all_modules]
@@ -174,4 +255,4 @@ class MNIST_Optimizer:
             test_loss, correct, len(self.test_loader.dataset),
             100. * correct / len(self.test_loader.dataset)))
 
-        return test_loss, correct
+        return test_loss, (100 * correct / len(self.test_loader.dataset))

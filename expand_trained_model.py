@@ -1,13 +1,15 @@
 import torch
 import os
-from models import FC_Net
+from models import FC_Net, Conv_Net
 from training import MNIST_Optimizer
 from expanding_modules import Conv1dExtendable
 
-model = FC_Net(layer_sizes=[784, 32, 32, 32, 32, 10])
+#model = FC_Net(layer_sizes=[784, 32, 32, 32, 32, 10])
+model = Conv_Net()
 trainer = MNIST_Optimizer(model, epochs=10)
 
-file = "trained_model_784_4x32_10"
+#file = "trained_model_784_4x32_10"
+file = "experiments/ConvNetExpansion/4_layers__extend_4_interval_470_lr_0.0001_min/model_trained_for_20_epochs"
 
 if os.path.exists(file):
     print("load model")
