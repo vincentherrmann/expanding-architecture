@@ -70,6 +70,26 @@ class Logger(object):
         self.writer.add_summary(summary, step)
         self.writer.flush()
 
+    def list_summary(self, tag, list, step):
+        a = np.array(list)
+        hist = tf.HistogramProto()
+        hist.min = float(0)
+        hist.max = float(len(list))
+        hist.num = 1#int(np.sum(a))
+        hist.sum = 0#int(np.dot(a, np.array(range(len(list)))))
+        hist.sum_squares = 0#int(np.dot(a, np.array(range(len(list)))**2))
+
+        for e in range(len(list)+1):
+            hist.bucket_limit.append(float(e))
+        hist.bucket.append(0)
+        for c in list:
+            hist.bucket.append(int(c) * (30.0 / len(list))) # this shows the right number in the diagram, but why???
+
+        summary = tf.Summary(value=[tf.Summary.Value(tag=tag, histo=hist)])
+        self.writer.add_summary(summary, step)
+        self.writer.flush()
+
+
     def tensor_summary(self, tag, tensor, step):
         tf_tensor = tf.Variable(tensor).to_proto()
         summary = tf.Summary(value=[tf.Summary.Value(tag=tag, tensor=tf_tensor)])

@@ -1,7 +1,7 @@
 import torch
 import os
 from models import FC_Net
-from training import MNIST_Optimizer
+from training import OptimizerMNIST
 from expanding_modules import Conv1dExtendable
 from logger import Logger
 
@@ -21,7 +21,7 @@ name = str(model.layer_count) + "_layers_" + "_extend_" + str(trainer.extension_
 folder = "./experiments/FixedExpansionRate/" + name
 
 logger=Logger(folder)
-model.logger = logger
+trainer.logger = logger
 
 trainer.train()
 torch.save(model.state_dict(), folder + "/model_trained_for_" + str(trainer.epochs) + "_epochs")
