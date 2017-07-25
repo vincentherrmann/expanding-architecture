@@ -13,7 +13,7 @@ class MutatingModule(object):
 
     def init_ncc(self):
         self.register_buffer("t0_weight", self.weight.data.clone())
-        self.register_buffer("start_ncc", torch.zeros(self.out_channels))
+        self.register_buffer("start_ncc", torch.zeros(self.out_channels).type_as(self.t0_weight))
         self.start_ncc = self.normalized_cross_correlation()
 
     def normalized_cross_correlation(self):
@@ -102,7 +102,7 @@ class MutatingModule(object):
         self.t0_weight = insert_slice(self.t0_weight, self.weight.data[channel_number + offset, :], dim=0,
                                       at_index=channel_number + offset)
         self.start_ncc[channel_number] = 0
-        self.start_ncc = insert_slice(self.start_ncc, torch.zeros(1), dim=0, at_index=channel_number + offset)
+        self.start_ncc = insert_slice(self.start_ncc, torch.zeros(1).type_as(self.start_ncc), dim=0, at_index=channel_number + offset)
         ncc = self.normalized_cross_correlation()
         self.start_ncc[channel_number] = ncc[channel_number]
         self.start_ncc[channel_number + offset] = ncc[channel_number + offset]
@@ -135,7 +135,7 @@ class MutatingModule(object):
         duplicated_slice = original_weight[:, channel_number, :].clone()
         ranks = torch.from_numpy(rankdata(torch.abs(duplicated_slice).numpy(), 'ordinal')).float() # rank by absolute value
         split_positions = ((len(ranks) - ranks.view_as(duplicated_slice)) / len(ranks)) * 2.5 #2.618
-        split_positions += torch.zeros(duplicated_slice.size()).uniform_(-0.1, 0.1) # add noise
+        split_positions += torch.zeros(duplicated_slice.size()).uniform_(-0.1, 0.1).type_as(split_positions) # add noise
         # shuffle positive and negative split positions
         split_tensor = torch.stack([split_positions, (1-split_positions)], dim=0)
         noise_size = [1, self.out_channels]
