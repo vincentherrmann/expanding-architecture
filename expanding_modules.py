@@ -141,7 +141,9 @@ class MutatingModule(object):
         split_tensor = torch.stack([split_positions, (1-split_positions)], dim=0)
         noise_size = [1, self.out_channels]
         noise_size.extend(self.kernel_size)
-        noise_idx = torch.zeros(noise_size).type_as(duplicated_slice).byte().bernoulli_(0.5).long()
+        noise_idx = torch.zeros(noise_size).byte().bernoulli_(0.5).long()
+        if split_tensor.is_cuda:
+            noise_idx.cuda()
         #noise_idx = torch.ByteTensor(size=noise_size).bernoulli_(0.5).long()
         split1 = torch.gather(split_tensor, dim=0, index=noise_idx)
         split2 = torch.gather(split_tensor, dim=0, index=1-noise_idx)
