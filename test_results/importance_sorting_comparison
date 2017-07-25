@@ -1,0 +1,336 @@
+load model
+initial test run:
+Test set: Average loss: 0.1499, Accuracy: 9570/10000 (96%)
+layer  fc0  sorted by ncc:
+indices of the features sorted by importance:
+
+ 20
+  6
+ 25
+  0
+ 30
+ 21
+ 29
+ 10
+ 11
+  7
+ 12
+ 19
+ 24
+ 15
+  2
+ 18
+ 31
+  9
+ 22
+  5
+  8
+ 27
+ 28
+  3
+ 14
+  4
+ 13
+ 23
+ 17
+ 26
+ 16
+  1
+[torch.LongTensor of size 32]
+
+layer  fc0  sorted by testing:
+Test set: Average loss: 0.1880, Accuracy: 9413/10000 (94%)
+Test set: Average loss: 0.2152, Accuracy: 9369/10000 (94%)
+Test set: Average loss: 0.1994, Accuracy: 9414/10000 (94%)
+Test set: Average loss: 0.2534, Accuracy: 9248/10000 (92%)
+Test set: Average loss: 0.4562, Accuracy: 8847/10000 (88%)
+Test set: Average loss: 0.1620, Accuracy: 9514/10000 (95%)
+Test set: Average loss: 0.1486, Accuracy: 9569/10000 (96%)
+Test set: Average loss: 0.1682, Accuracy: 9498/10000 (95%)
+Test set: Average loss: 0.2560, Accuracy: 9214/10000 (92%)
+Test set: Average loss: 0.2365, Accuracy: 9281/10000 (93%)
+Test set: Average loss: 0.1623, Accuracy: 9518/10000 (95%)
+Test set: Average loss: 0.1597, Accuracy: 9532/10000 (95%)
+Test set: Average loss: 0.1647, Accuracy: 9513/10000 (95%)
+Test set: Average loss: 0.3128, Accuracy: 9077/10000 (91%)
+Test set: Average loss: 0.2269, Accuracy: 9308/10000 (93%)
+Test set: Average loss: 0.1760, Accuracy: 9501/10000 (95%)
+Test set: Average loss: 0.2021, Accuracy: 9343/10000 (93%)
+Test set: Average loss: 0.3047, Accuracy: 9095/10000 (91%)
+Test set: Average loss: 0.3168, Accuracy: 9126/10000 (91%)
+Test set: Average loss: 0.2054, Accuracy: 9398/10000 (94%)
+Test set: Average loss: 0.1484, Accuracy: 9568/10000 (96%)
+Test set: Average loss: 0.1666, Accuracy: 9495/10000 (95%)
+Test set: Average loss: 0.2351, Accuracy: 9298/10000 (93%)
+Test set: Average loss: 0.2225, Accuracy: 9347/10000 (93%)
+Test set: Average loss: 0.1795, Accuracy: 9490/10000 (95%)
+Test set: Average loss: 0.1539, Accuracy: 9552/10000 (96%)
+Test set: Average loss: 0.2626, Accuracy: 9134/10000 (91%)
+Test set: Average loss: 0.2031, Accuracy: 9410/10000 (94%)
+Test set: Average loss: 0.2415, Accuracy: 9276/10000 (93%)
+Test set: Average loss: 0.1702, Accuracy: 9521/10000 (95%)
+Test set: Average loss: 0.1640, Accuracy: 9528/10000 (95%)
+Test set: Average loss: 0.2008, Accuracy: 9413/10000 (94%)
+indices of the features sorted by importance:
+
+ 20
+  6
+ 25
+ 11
+  5
+ 10
+ 30
+ 12
+ 21
+  7
+ 29
+ 15
+ 24
+  0
+  2
+ 31
+ 16
+ 27
+ 19
+  1
+ 23
+ 14
+ 22
+  9
+ 28
+  3
+  8
+ 26
+ 17
+ 13
+ 18
+  4
+[torch.LongTensor of size 32]
+
+index difference between ncc and testing in increasing importance: 
+[0, 0, 0, -10, -2, -3, -4, 2, 5, 0, 3, -7, 0, 2, 0, -15, 1, -6, -4, 15, -6, 4, -2, -2, 3, -6, -3, 7, 0, 2, 14, 12]
+
+
+initial test run:
+Test set: Average loss: 0.1498, Accuracy: 9570/10000 (96%)
+layer  fc1  sorted by ncc:
+indices of the features sorted by importance:
+
+ 29
+ 21
+ 22
+  3
+ 30
+  9
+ 31
+  2
+ 16
+  0
+ 28
+ 27
+ 23
+  8
+  1
+  7
+ 11
+  6
+ 10
+  4
+ 18
+ 15
+ 25
+ 26
+  5
+ 13
+ 14
+ 20
+ 24
+ 17
+ 12
+ 19
+[torch.LongTensor of size 32]
+
+layer  fc1  sorted by testing:
+Test set: Average loss: 0.1480, Accuracy: 9569/10000 (96%)
+Test set: Average loss: 0.2440, Accuracy: 9279/10000 (93%)
+Test set: Average loss: 0.1734, Accuracy: 9476/10000 (95%)
+Test set: Average loss: 0.1493, Accuracy: 9568/10000 (96%)
+Test set: Average loss: 0.1837, Accuracy: 9460/10000 (95%)
+Test set: Average loss: 0.1498, Accuracy: 9561/10000 (96%)
+Test set: Average loss: 0.2288, Accuracy: 9302/10000 (93%)
+Test set: Average loss: 0.3105, Accuracy: 9029/10000 (90%)
+Test set: Average loss: 0.1633, Accuracy: 9521/10000 (95%)
+Test set: Average loss: 0.1837, Accuracy: 9458/10000 (95%)
+Test set: Average loss: 0.2006, Accuracy: 9393/10000 (94%)
+Test set: Average loss: 0.2002, Accuracy: 9415/10000 (94%)
+Test set: Average loss: 0.1713, Accuracy: 9508/10000 (95%)
+Test set: Average loss: 0.2382, Accuracy: 9254/10000 (93%)
+Test set: Average loss: 0.1670, Accuracy: 9509/10000 (95%)
+Test set: Average loss: 0.1546, Accuracy: 9529/10000 (95%)
+Test set: Average loss: 0.2403, Accuracy: 9258/10000 (93%)
+Test set: Average loss: 0.2908, Accuracy: 9095/10000 (91%)
+Test set: Average loss: 0.2563, Accuracy: 9182/10000 (92%)
+Test set: Average loss: 0.1605, Accuracy: 9524/10000 (95%)
+Test set: Average loss: 0.1695, Accuracy: 9493/10000 (95%)
+Test set: Average loss: 0.1482, Accuracy: 9569/10000 (96%)
+Test set: Average loss: 0.1479, Accuracy: 9570/10000 (96%)
+Test set: Average loss: 0.1697, Accuracy: 9496/10000 (95%)
+Test set: Average loss: 0.1900, Accuracy: 9442/10000 (94%)
+Test set: Average loss: 0.1690, Accuracy: 9503/10000 (95%)
+Test set: Average loss: 0.1664, Accuracy: 9513/10000 (95%)
+Test set: Average loss: 0.1480, Accuracy: 9571/10000 (96%)
+Test set: Average loss: 0.1487, Accuracy: 9570/10000 (96%)
+Test set: Average loss: 0.1492, Accuracy: 9570/10000 (96%)
+Test set: Average loss: 0.2600, Accuracy: 9193/10000 (92%)
+Test set: Average loss: 0.1667, Accuracy: 9527/10000 (95%)
+indices of the features sorted by importance:
+
+ 22
+  0
+ 27
+ 21
+ 28
+ 29
+  3
+  5
+ 15
+ 19
+  8
+ 26
+ 31
+ 14
+ 25
+ 20
+ 23
+ 12
+  2
+  9
+  4
+ 24
+ 11
+ 10
+  6
+ 13
+ 16
+  1
+ 18
+ 30
+ 17
+  7
+[torch.LongTensor of size 32]
+
+index difference between ncc and testing in increasing importance:
+[-5, -2, 2, -3, -25, -14, -6, -11, -18, 8, 6, 9, -4, 3, -13, -16, -6, -7, -5, -1, -8, 13, 8, 12, 17, 0, 13, 12, 7, -1, 13, 22]
+
+
+load model
+initial test run:
+Test set: Average loss: 0.1485, Accuracy: 9570/10000 (96%)
+layer  fc2  sorted by ncc:
+indices of the features sorted by importance:
+
+ 15
+ 31
+ 24
+ 30
+ 16
+ 17
+  9
+ 10
+ 18
+ 19
+  0
+ 23
+  7
+ 21
+ 22
+ 26
+ 28
+ 14
+  4
+ 25
+ 11
+  1
+  8
+ 27
+ 13
+ 29
+  6
+  3
+ 20
+  2
+  5
+ 12
+[torch.LongTensor of size 32]
+
+layer  fc2  sorted by testing:
+Test set: Average loss: 0.1467, Accuracy: 9579/10000 (96%)
+Test set: Average loss: 0.1577, Accuracy: 9547/10000 (95%)
+Test set: Average loss: 0.1576, Accuracy: 9543/10000 (95%)
+Test set: Average loss: 0.3711, Accuracy: 8766/10000 (88%)
+Test set: Average loss: 0.1617, Accuracy: 9529/10000 (95%)
+Test set: Average loss: 0.2196, Accuracy: 9354/10000 (94%)
+Test set: Average loss: 0.1592, Accuracy: 9548/10000 (95%)
+Test set: Average loss: 0.1651, Accuracy: 9493/10000 (95%)
+Test set: Average loss: 0.1837, Accuracy: 9453/10000 (95%)
+Test set: Average loss: 0.1480, Accuracy: 9570/10000 (96%)
+Test set: Average loss: 0.1486, Accuracy: 9568/10000 (96%)
+Test set: Average loss: 0.2989, Accuracy: 9009/10000 (90%)
+Test set: Average loss: 0.1888, Accuracy: 9458/10000 (95%)
+Test set: Average loss: 0.2125, Accuracy: 9358/10000 (94%)
+Test set: Average loss: 0.3458, Accuracy: 8918/10000 (89%)
+Test set: Average loss: 0.1488, Accuracy: 9570/10000 (96%)
+Test set: Average loss: 0.1481, Accuracy: 9570/10000 (96%)
+Test set: Average loss: 0.1509, Accuracy: 9570/10000 (96%)
+Test set: Average loss: 0.1501, Accuracy: 9570/10000 (96%)
+Test set: Average loss: 0.1479, Accuracy: 9570/10000 (96%)
+Test set: Average loss: 0.1703, Accuracy: 9502/10000 (95%)
+Test set: Average loss: 0.2614, Accuracy: 9241/10000 (92%)
+Test set: Average loss: 0.1794, Accuracy: 9460/10000 (95%)
+Test set: Average loss: 0.1527, Accuracy: 9543/10000 (95%)
+Test set: Average loss: 0.1491, Accuracy: 9570/10000 (96%)
+Test set: Average loss: 0.1538, Accuracy: 9550/10000 (96%)
+Test set: Average loss: 0.1700, Accuracy: 9497/10000 (95%)
+Test set: Average loss: 0.2082, Accuracy: 9376/10000 (94%)
+Test set: Average loss: 0.3026, Accuracy: 9132/10000 (91%)
+Test set: Average loss: 0.2674, Accuracy: 9166/10000 (92%)
+Test set: Average loss: 0.1486, Accuracy: 9570/10000 (96%)
+Test set: Average loss: 0.1479, Accuracy: 9570/10000 (96%)
+indices of the features sorted by importance:
+
+  0
+ 31
+ 19
+  9
+ 16
+ 10
+ 30
+ 15
+ 24
+ 18
+ 17
+ 23
+ 25
+  2
+  1
+  6
+  4
+  7
+ 26
+ 20
+ 22
+  8
+ 12
+ 27
+ 13
+  5
+ 21
+ 29
+ 11
+ 28
+ 14
+  3
+[torch.LongTensor of size 32]
+
+index difference between ncc and testing in increasing importance:
+[-7, 0, -6, -3, 0, -5, 3, 2, -1, 7, 10, 0, -5, -13, -6, -3, -13, -13, 2, 7, -8, 7, 1, 0, 0, -2, 11, -4, 9, 16, 5, 9]

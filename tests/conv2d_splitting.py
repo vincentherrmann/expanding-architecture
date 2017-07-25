@@ -4,7 +4,7 @@ import os
 import torch.nn as nn
 import torch.nn.functional as F
 from models import FC_Net, Conv_Net
-from training import MNIST_Optimizer
+from training import OptimizerMNIST
 from torch.autograd import Variable
 from expanding_modules import Conv1dExtendable, Conv2dExtendable, Flatten2d1d
 from collections import OrderedDict
@@ -61,7 +61,7 @@ class Test_Model(nn.Module):
         return s
 
 model = Test_Model()
-trainer = MNIST_Optimizer(model, epochs=10)
+trainer = OptimizerMNIST(model, epochs=10)
 
 file = "trained_model_784_4x32_10"
 

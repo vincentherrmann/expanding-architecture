@@ -1,4 +1,3 @@
-'''VGG11/13/16/19 in Pytorch.'''
 # adapted from https://github.com/kuangliu/pytorch-cifar/
 import torch
 import torch.nn as nn
@@ -58,18 +57,8 @@ class VGG(nn.Module):
         self.layer_count = layer
         self.seq = SequentialNamed(dict)
 
-    def parameter_count(self):
-        par = list(self.parameters())
-        s = sum([np.prod(list(d.size())) for d in par])
-        return s
-
     def forward(self, x):
         out = self.seq(x)
         out = out.squeeze()
         #out = self.classifier(out)
         return out
-
-
-# net = VGG('VGG11')
-# x = torch.randn(2,3,32,32)
-# print(net(Variable(x)).size())

@@ -11,6 +11,7 @@ from torch.autograd import Variable
 from expanding_modules import Conv1dExtendable, Conv2dExtendable, MutatingModule
 from logger import Logger
 
+
 class Expander:
     def __init__(self, model, logger=None):
         self.model = model
@@ -90,7 +91,7 @@ class Expander:
                 print("in ", max_name, ", split feature number ", max_idx, " with ncc ", max_val)
                 ncc_avg += max_val
 
-        print("new parameter count: ", self.model.parameter_count())
+        print("new parameter count: ", self.parameter_count())
         #self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
         self.splitted_ncc_avg = ncc_avg / n
 
@@ -156,7 +157,7 @@ class Expander:
             #                            momentum=self.momentum,
             #                            weight_decay=self.weight_decay)
             #self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
-            print("new parameter count: ", self.model.parameter_count())
+            print("new parameter count: ", self.parameter_count())
             # print("test result after expanding: ")
             # self.test(epoch)
         else:
@@ -181,7 +182,7 @@ class Expander:
         #     self.last_logged_validation = validation_position
 
         # parameter count
-        self.logger.scalar_summary("parameter count", self.model.parameter_count(), batch_idx)
+        self.logger.scalar_summary("parameter count", self.parameter_count(), batch_idx)
 
         # parameter histograms
         for tag, value, in self.model.named_parameters():
@@ -204,6 +205,10 @@ class Expander:
                 channels.append(module.out_channels)
         self.logger.list_summary("model_shape", channels, batch_idx)
 
+    def parameter_count(self):
+        par = list(self.model.parameters())
+        s = sum([np.prod(list(d.size())) for d in par])
+        return s
 
 class OptimizerMNIST(Expander):
     def __init__(self, model,

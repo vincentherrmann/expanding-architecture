@@ -49,11 +49,6 @@ class FC_Net(nn.Module):
         x = self.seq(x).squeeze()
         return F.log_softmax(x)
 
-    def parameter_count(self):
-        par = list(self.parameters())
-        s = sum([np.prod(list(d.size())) for d in par])
-        return s
-
 
 class Conv_Net(nn.Module):
     def __init__(self, conv=[1, 4, 4], kernels_size=[5, 5], fc=[4, 10]):
@@ -153,11 +148,6 @@ class Conv_Net(nn.Module):
         x = x.view(-1, 1, 28, 28)
         x = self.seq(x).squeeze()
         return F.log_softmax(x)
-
-    def parameter_count(self):
-        par = list(self.parameters())
-        s = sum([np.prod(list(d.size())) for d in par])
-        return s
 
 
 class SequentialNamed(nn.Sequential):

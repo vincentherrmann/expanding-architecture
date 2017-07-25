@@ -1,0 +1,555 @@
+load model
+initial test run:
+Test set: Average loss: 0.1479, Accuracy: 9570/10000 (96%)
+Prune the least important feature of each layer a given number of times without reloading the model
+reduce least important feature ( 0 )
+in  seq.fc0 , prune feature number  20  with ncc  0.035796165466308594
+in  seq.fc1 , prune feature number  3  with ncc  0.005103111267089844
+in  seq.fc2 , prune feature number  30  with ncc  0.001006007194519043
+in  seq.fc3 , prune feature number  27  with ncc  0.002034783363342285
+in  seq.fc4 , prune feature number  8  with ncc  0.03001081943511963
+Test set: Average loss: 0.1499, Accuracy: 9567/10000 (96%)
+change of test loss:  1.0135097799887187
+
+reduce least important feature ( 1 )
+in  seq.fc0 , prune feature number  6  with ncc  0.13042479753494263
+in  seq.fc1 , prune feature number  29  with ncc  0.005048215389251709
+in  seq.fc2 , prune feature number  16  with ncc  0.0004963874816894531
+in  seq.fc3 , prune feature number  9  with ncc  0.004774749279022217
+in  seq.fc4 , prune feature number  8  with ncc  0.03318667411804199
+Test set: Average loss: 0.2616, Accuracy: 9190/10000 (92%)
+change of test loss:  1.7686138095913233
+
+reduce least important feature ( 2 )
+in  seq.fc0 , prune feature number  23  with ncc  0.22953391075134277
+in  seq.fc1 , prune feature number  28  with ncc  0.0011986494064331055
+in  seq.fc2 , prune feature number  16  with ncc  0.004758656024932861
+in  seq.fc3 , prune feature number  11  with ncc  0.001034855842590332
+in  seq.fc4 , prune feature number  8  with ncc  0.026974916458129883
+Test set: Average loss: 0.2852, Accuracy: 9106/10000 (91%)
+change of test loss:  1.9279973706706415
+
+reduce least important feature ( 3 )
+in  seq.fc0 , prune feature number  0  with ncc  0.2297995686531067
+in  seq.fc1 , prune feature number  8  with ncc  0.014067888259887695
+in  seq.fc2 , prune feature number  22  with ncc  0.003029942512512207
+in  seq.fc3 , prune feature number  28  with ncc  0.0010880827903747559
+in  seq.fc4 , prune feature number  8  with ncc  0.02351433038711548
+Test set: Average loss: 0.4712, Accuracy: 8431/10000 (84%)
+change of test loss:  3.1855023908567537
+
+reduce least important feature ( 4 )
+in  seq.fc0 , prune feature number  26  with ncc  0.23973196744918823
+in  seq.fc1 , prune feature number  21  with ncc  0.035477519035339355
+in  seq.fc2 , prune feature number  17  with ncc  0.010356128215789795
+in  seq.fc3 , prune feature number  23  with ncc  0.027791202068328857
+in  seq.fc4 , prune feature number  8  with ncc  0.01983046531677246
+Test set: Average loss: 0.6215, Accuracy: 7935/10000 (79%)
+change of test loss:  4.20145361856918
+
+reduce least important feature ( 5 )
+in  seq.fc0 , prune feature number  18  with ncc  0.26735198497772217
+in  seq.fc1 , prune feature number  14  with ncc  0.04083096981048584
+in  seq.fc2 , prune feature number  16  with ncc  0.03306847810745239
+in  seq.fc3 , prune feature number  26  with ncc  0.041357457637786865
+in  seq.fc4 , prune feature number  8  with ncc  0.029642879962921143
+Test set: Average loss: 0.8583, Accuracy: 7127/10000 (71%)
+change of test loss:  5.802631814461306
+
+reduce least important feature ( 6 )
+in  seq.fc0 , prune feature number  24  with ncc  0.3374543786048889
+in  seq.fc1 , prune feature number  25  with ncc  0.04141587018966675
+in  seq.fc2 , prune feature number  19  with ncc  0.029117941856384277
+in  seq.fc3 , prune feature number  0  with ncc  0.04561716318130493
+in  seq.fc4 , prune feature number  8  with ncc  0.01702427864074707
+Test set: Average loss: 0.9895, Accuracy: 6531/10000 (65%)
+change of test loss:  6.689532469852372
+
+reduce least important feature ( 7 )
+in  seq.fc0 , prune feature number  8  with ncc  0.3378235101699829
+in  seq.fc1 , prune feature number  19  with ncc  0.05042785406112671
+in  seq.fc2 , prune feature number  19  with ncc  0.030963599681854248
+in  seq.fc3 , prune feature number  14  with ncc  0.07852423191070557
+in  seq.fc4 , prune feature number  8  with ncc  0.004912197589874268
+Test set: Average loss: 0.7416, Accuracy: 7256/10000 (73%)
+change of test loss:  5.0131293775681
+
+reduce least important feature ( 8 )
+in  seq.fc0 , prune feature number  8  with ncc  0.34057432413101196
+in  seq.fc1 , prune feature number  18  with ncc  0.057227492332458496
+in  seq.fc2 , prune feature number  18  with ncc  0.03748577833175659
+in  seq.fc3 , prune feature number  14  with ncc  0.07761400938034058
+in  seq.fc4 , prune feature number  7  with ncc  0.06433039903640747
+Test set: Average loss: 0.8159, Accuracy: 7582/10000 (76%)
+change of test loss:  5.515450292716047
+
+reduce least important feature ( 9 )
+in  seq.fc0 , prune feature number  5  with ncc  0.341693639755249
+in  seq.fc1 , prune feature number  21  with ncc  0.06096535921096802
+in  seq.fc2 , prune feature number  22  with ncc  0.05208027362823486
+in  seq.fc3 , prune feature number  3  with ncc  0.07675951719284058
+in  seq.fc4 , prune feature number  7  with ncc  0.05720406770706177
+Test set: Average loss: 0.8236, Accuracy: 7146/10000 (71%)
+change of test loss:  5.567861043761351
+
+
+Prune the most important feature of each layer a given number of times without reloading the model
+reduce most important feature ( 0 )
+in  seq.fc0 , prune feature number  1  with ncc  0.49559271335601807
+in  seq.fc1 , prune feature number  12  with ncc  0.1827060580253601
+in  seq.fc2 , prune feature number  5  with ncc  0.1551770567893982
+in  seq.fc3 , prune feature number  6  with ncc  0.16180306673049927
+in  seq.fc4 , prune feature number  2  with ncc  0.2193291187286377
+Test set: Average loss: 0.4148, Accuracy: 8716/10000 (87%)
+change of test loss:  2.803832815504156
+
+reduce most important feature ( 1 )
+in  seq.fc0 , prune feature number  15  with ncc  0.48521557450294495
+in  seq.fc1 , prune feature number  16  with ncc  0.15913909673690796
+in  seq.fc2 , prune feature number  11  with ncc  0.17764747142791748
+in  seq.fc3 , prune feature number  20  with ncc  0.12041270732879639
+in  seq.fc4 , prune feature number  2  with ncc  0.22566068172454834
+Test set: Average loss: 1.3762, Accuracy: 6171/10000 (62%)
+change of test loss:  9.303266194361093
+
+reduce most important feature ( 2 )
+in  seq.fc0 , prune feature number  24  with ncc  0.4418179392814636
+in  seq.fc1 , prune feature number  22  with ncc  0.14993464946746826
+in  seq.fc2 , prune feature number  2  with ncc  0.14809483289718628
+in  seq.fc3 , prune feature number  28  with ncc  0.15049493312835693
+in  seq.fc4 , prune feature number  3  with ncc  0.22995471954345703
+Test set: Average loss: 1.3242, Accuracy: 6345/10000 (63%)
+change of test loss:  8.95211575192001
+
+reduce most important feature ( 3 )
+in  seq.fc0 , prune feature number  15  with ncc  0.4334266185760498
+in  seq.fc1 , prune feature number  16  with ncc  0.15931445360183716
+in  seq.fc2 , prune feature number  2  with ncc  0.1359582543373108
+in  seq.fc3 , prune feature number  2  with ncc  0.1409435272216797
+in  seq.fc4 , prune feature number  3  with ncc  0.25912898778915405
+Test set: Average loss: 1.6021, Accuracy: 5402/10000 (54%)
+change of test loss:  10.830694264417419
+
+reduce most important feature ( 4 )
+in  seq.fc0 , prune feature number  20  with ncc  0.4331091642379761
+in  seq.fc1 , prune feature number  17  with ncc  0.14379632472991943
+in  seq.fc2 , prune feature number  3  with ncc  0.1444951891899109
+in  seq.fc3 , prune feature number  5  with ncc  0.14223706722259521
+in  seq.fc4 , prune feature number  2  with ncc  0.2564021348953247
+Test set: Average loss: 1.8924, Accuracy: 4565/10000 (46%)
+change of test loss:  12.792789784248015
+
+reduce most important feature ( 5 )
+in  seq.fc0 , prune feature number  12  with ncc  0.4274510443210602
+in  seq.fc1 , prune feature number  20  with ncc  0.14932411909103394
+in  seq.fc2 , prune feature number  8  with ncc  0.1490790843963623
+in  seq.fc3 , prune feature number  24  with ncc  0.1210174560546875
+in  seq.fc4 , prune feature number  2  with ncc  0.2425764799118042
+Test set: Average loss: 1.5220, Accuracy: 4587/10000 (46%)
+change of test loss:  10.289147715263466
+
+reduce most important feature ( 6 )
+in  seq.fc0 , prune feature number  3  with ncc  0.41694584488868713
+in  seq.fc1 , prune feature number  1  with ncc  0.15562617778778076
+in  seq.fc2 , prune feature number  21  with ncc  0.2008892297744751
+in  seq.fc3 , prune feature number  1  with ncc  0.16740906238555908
+in  seq.fc4 , prune feature number  2  with ncc  0.27159178256988525
+Test set: Average loss: 1.3554, Accuracy: 5083/10000 (51%)
+change of test loss:  9.162569839741472
+
+reduce most important feature ( 7 )
+in  seq.fc0 , prune feature number  11  with ncc  0.40564048290252686
+in  seq.fc1 , prune feature number  14  with ncc  0.1956077218055725
+in  seq.fc2 , prune feature number  17  with ncc  0.13809478282928467
+in  seq.fc3 , prune feature number  11  with ncc  0.14134865999221802
+in  seq.fc4 , prune feature number  2  with ncc  0.2768898606300354
+Test set: Average loss: 1.5855, Accuracy: 4408/10000 (44%)
+change of test loss:  10.718361586337707
+
+reduce most important feature ( 8 )
+in  seq.fc0 , prune feature number  2  with ncc  0.40337130427360535
+in  seq.fc1 , prune feature number  3  with ncc  0.16541850566864014
+in  seq.fc2 , prune feature number  16  with ncc  0.15400409698486328
+in  seq.fc3 , prune feature number  11  with ncc  0.13122260570526123
+in  seq.fc4 , prune feature number  3  with ncc  0.2769656181335449
+Test set: Average loss: 2.2830, Accuracy: 1678/10000 (17%)
+change of test loss:  15.433404764000542
+
+reduce most important feature ( 9 )
+in  seq.fc0 , prune feature number  19  with ncc  0.400928258895874
+in  seq.fc1 , prune feature number  18  with ncc  0.1619398593902588
+in  seq.fc2 , prune feature number  21  with ncc  0.25876590609550476
+in  seq.fc3 , prune feature number  13  with ncc  0.1442447304725647
+in  seq.fc4 , prune feature number  3  with ncc  0.26750892400741577
+Test set: Average loss: 2.4148, Accuracy: 1823/10000 (18%)
+change of test loss:  16.32478222242421
+
+
+
+ prune the  1  least important features for all layers at once
+
+in  seq.fc0 , prune feature number  20  with ncc  0.035796165466308594
+in  seq.fc1 , prune feature number  3  with ncc  0.005103111267089844
+in  seq.fc2 , prune feature number  30  with ncc  0.001006007194519043
+in  seq.fc3 , prune feature number  27  with ncc  0.002034783363342285
+in  seq.fc4 , prune feature number  8  with ncc  0.03001081943511963
+Test set: Average loss: 0.1494, Accuracy: 9567/10000 (96%)
+change of test loss:  1.0089096044383612
+
+
+ prune the  2  least important features for all layers at once
+
+in  seq.fc0 , prune feature number  20  with ncc  0.035796165466308594
+in  seq.fc0 , prune feature number  6  with ncc  0.13042479753494263
+in  seq.fc1 , prune feature number  30  with ncc  0.005048215389251709
+in  seq.fc1 , prune feature number  3  with ncc  0.0075116753578186035
+in  seq.fc2 , prune feature number  16  with ncc  0.0004963874816894531
+in  seq.fc2 , prune feature number  17  with ncc  0.0010975003242492676
+in  seq.fc3 , prune feature number  31  with ncc  0.0005518794059753418
+in  seq.fc3 , prune feature number  12  with ncc  0.008824706077575684
+in  seq.fc4 , prune feature number  8  with ncc  0.016657888889312744
+in  seq.fc4 , prune feature number  7  with ncc  0.06804299354553223
+Test set: Average loss: 0.2686, Accuracy: 9170/10000 (92%)
+change of test loss:  1.8135898480983081
+
+
+ prune the  3  least important features for all layers at once
+
+in  seq.fc0 , prune feature number  20  with ncc  0.035796165466308594
+in  seq.fc0 , prune feature number  6  with ncc  0.13042479753494263
+in  seq.fc0 , prune feature number  25  with ncc  0.22953391075134277
+in  seq.fc1 , prune feature number  29  with ncc  0.0011986494064331055
+in  seq.fc1 , prune feature number  30  with ncc  0.009907782077789307
+in  seq.fc1 , prune feature number  9  with ncc  0.015076875686645508
+in  seq.fc2 , prune feature number  31  with ncc  0.002154052257537842
+in  seq.fc2 , prune feature number  24  with ncc  0.008349955081939697
+in  seq.fc2 , prune feature number  16  with ncc  0.017398357391357422
+in  seq.fc3 , prune feature number  9  with ncc  0.0063266754150390625
+in  seq.fc3 , prune feature number  17  with ncc  0.010309696197509766
+in  seq.fc3 , prune feature number  12  with ncc  0.011178731918334961
+in  seq.fc4 , prune feature number  8  with ncc  0.011857748031616211
+in  seq.fc4 , prune feature number  7  with ncc  0.05698585510253906
+in  seq.fc4 , prune feature number  1  with ncc  0.08754336833953857
+Test set: Average loss: 0.3672, Accuracy: 8773/10000 (88%)
+change of test loss:  2.479861669936003
+
+
+ prune the  4  least important features for all layers at once
+
+in  seq.fc0 , prune feature number  20  with ncc  0.035796165466308594
+in  seq.fc0 , prune feature number  6  with ncc  0.13042479753494263
+in  seq.fc0 , prune feature number  25  with ncc  0.22953391075134277
+in  seq.fc0 , prune feature number  0  with ncc  0.2297995686531067
+in  seq.fc1 , prune feature number  30  with ncc  0.004479050636291504
+in  seq.fc1 , prune feature number  9  with ncc  0.014067888259887695
+in  seq.fc1 , prune feature number  3  with ncc  0.017604172229766846
+in  seq.fc1 , prune feature number  23  with ncc  0.03802454471588135
+in  seq.fc2 , prune feature number  17  with ncc  1.7523765563964844e-05
+in  seq.fc2 , prune feature number  19  with ncc  0.006621956825256348
+in  seq.fc2 , prune feature number  24  with ncc  0.00882720947265625
+in  seq.fc2 , prune feature number  18  with ncc  0.012395024299621582
+in  seq.fc3 , prune feature number  0  with ncc  0.013420403003692627
+in  seq.fc3 , prune feature number  31  with ncc  0.013726294040679932
+in  seq.fc3 , prune feature number  9  with ncc  0.0175970196723938
+in  seq.fc3 , prune feature number  12  with ncc  0.018878161907196045
+in  seq.fc4 , prune feature number  8  with ncc  0.00824284553527832
+in  seq.fc4 , prune feature number  7  with ncc  0.05779331922531128
+in  seq.fc4 , prune feature number  1  with ncc  0.08716613054275513
+in  seq.fc4 , prune feature number  4  with ncc  0.11263912916183472
+Test set: Average loss: 0.5624, Accuracy: 8114/10000 (81%)
+change of test loss:  3.7979698138315614
+
+
+ prune the  5  least important features for all layers at once
+
+in  seq.fc0 , prune feature number  20  with ncc  0.035796165466308594
+in  seq.fc0 , prune feature number  6  with ncc  0.13042479753494263
+in  seq.fc0 , prune feature number  25  with ncc  0.22953391075134277
+in  seq.fc0 , prune feature number  0  with ncc  0.2297995686531067
+in  seq.fc0 , prune feature number  30  with ncc  0.23973196744918823
+in  seq.fc1 , prune feature number  30  with ncc  0.004885971546173096
+in  seq.fc1 , prune feature number  3  with ncc  0.01382976770401001
+in  seq.fc1 , prune feature number  9  with ncc  0.015803635120391846
+in  seq.fc1 , prune feature number  23  with ncc  0.035477519035339355
+in  seq.fc1 , prune feature number  29  with ncc  0.04533815383911133
+in  seq.fc2 , prune feature number  24  with ncc  0.0016101598739624023
+in  seq.fc2 , prune feature number  17  with ncc  0.005930781364440918
+in  seq.fc2 , prune feature number  19  with ncc  0.010356128215789795
+in  seq.fc2 , prune feature number  18  with ncc  0.028719782829284668
+in  seq.fc2 , prune feature number  16  with ncc  0.030618250370025635
+in  seq.fc3 , prune feature number  31  with ncc  0.0069748759269714355
+in  seq.fc3 , prune feature number  12  with ncc  0.018436431884765625
+in  seq.fc3 , prune feature number  0  with ncc  0.02610689401626587
+in  seq.fc3 , prune feature number  27  with ncc  0.029145359992980957
+in  seq.fc3 , prune feature number  9  with ncc  0.0327526330947876
+in  seq.fc4 , prune feature number  8  with ncc  0.012112259864807129
+in  seq.fc4 , prune feature number  7  with ncc  0.05763763189315796
+in  seq.fc4 , prune feature number  1  with ncc  0.08711874485015869
+in  seq.fc4 , prune feature number  4  with ncc  0.10995757579803467
+in  seq.fc4 , prune feature number  6  with ncc  0.1418590545654297
+Test set: Average loss: 0.6226, Accuracy: 7934/10000 (79%)
+change of test loss:  4.204413197215707
+
+
+ prune the  6  least important features for all layers at once
+
+in  seq.fc0 , prune feature number  20  with ncc  0.035796165466308594
+in  seq.fc0 , prune feature number  6  with ncc  0.13042479753494263
+in  seq.fc0 , prune feature number  25  with ncc  0.22953391075134277
+in  seq.fc0 , prune feature number  0  with ncc  0.2297995686531067
+in  seq.fc0 , prune feature number  30  with ncc  0.23973196744918823
+in  seq.fc0 , prune feature number  21  with ncc  0.26735198497772217
+in  seq.fc1 , prune feature number  9  with ncc  5.4836273193359375e-06
+in  seq.fc1 , prune feature number  30  with ncc  0.0024999380111694336
+in  seq.fc1 , prune feature number  3  with ncc  0.014207303524017334
+in  seq.fc1 , prune feature number  23  with ncc  0.03338825702667236
+in  seq.fc1 , prune feature number  29  with ncc  0.03418010473251343
+in  seq.fc1 , prune feature number  16  with ncc  0.04083096981048584
+in  seq.fc2 , prune feature number  30  with ncc  0.004013955593109131
+in  seq.fc2 , prune feature number  19  with ncc  0.007792115211486816
+in  seq.fc2 , prune feature number  24  with ncc  0.009943068027496338
+in  seq.fc2 , prune feature number  17  with ncc  0.013341903686523438
+in  seq.fc2 , prune feature number  16  with ncc  0.028703510761260986
+in  seq.fc2 , prune feature number  18  with ncc  0.03306847810745239
+in  seq.fc3 , prune feature number  31  with ncc  0.003373086452484131
+in  seq.fc3 , prune feature number  12  with ncc  0.009869515895843506
+in  seq.fc3 , prune feature number  9  with ncc  0.02221977710723877
+in  seq.fc3 , prune feature number  27  with ncc  0.02486783266067505
+in  seq.fc3 , prune feature number  25  with ncc  0.03626453876495361
+in  seq.fc3 , prune feature number  30  with ncc  0.041357457637786865
+in  seq.fc4 , prune feature number  8  with ncc  0.029642879962921143
+in  seq.fc4 , prune feature number  7  with ncc  0.06251835823059082
+in  seq.fc4 , prune feature number  1  with ncc  0.09245270490646362
+in  seq.fc4 , prune feature number  4  with ncc  0.11079084873199463
+in  seq.fc4 , prune feature number  6  with ncc  0.14621400833129883
+in  seq.fc4 , prune feature number  9  with ncc  0.1749117374420166
+Test set: Average loss: 0.8558, Accuracy: 7127/10000 (71%)
+change of test loss:  5.778895962476824
+
+
+ prune the  7  least important features for all layers at once
+
+in  seq.fc0 , prune feature number  20  with ncc  0.035796165466308594
+in  seq.fc0 , prune feature number  6  with ncc  0.13042479753494263
+in  seq.fc0 , prune feature number  25  with ncc  0.22953391075134277
+in  seq.fc0 , prune feature number  0  with ncc  0.2297995686531067
+in  seq.fc0 , prune feature number  30  with ncc  0.23973196744918823
+in  seq.fc0 , prune feature number  21  with ncc  0.26735198497772217
+in  seq.fc0 , prune feature number  29  with ncc  0.3374543786048889
+in  seq.fc1 , prune feature number  30  with ncc  0.0010203123092651367
+in  seq.fc1 , prune feature number  9  with ncc  0.014177143573760986
+in  seq.fc1 , prune feature number  3  with ncc  0.019940495491027832
+in  seq.fc1 , prune feature number  16  with ncc  0.03545421361923218
+in  seq.fc1 , prune feature number  23  with ncc  0.03573107719421387
+in  seq.fc1 , prune feature number  31  with ncc  0.04141587018966675
+in  seq.fc1 , prune feature number  29  with ncc  0.05154508352279663
+in  seq.fc2 , prune feature number  19  with ncc  0.003063023090362549
+in  seq.fc2 , prune feature number  24  with ncc  0.005133688449859619
+in  seq.fc2 , prune feature number  17  with ncc  0.021121084690093994
+in  seq.fc2 , prune feature number  23  with ncc  0.029117941856384277
+in  seq.fc2 , prune feature number  25  with ncc  0.03314173221588135
+in  seq.fc2 , prune feature number  18  with ncc  0.03846925497055054
+in  seq.fc2 , prune feature number  30  with ncc  0.04608994722366333
+in  seq.fc3 , prune feature number  9  with ncc  0.005845606327056885
+in  seq.fc3 , prune feature number  27  with ncc  0.01854538917541504
+in  seq.fc3 , prune feature number  25  with ncc  0.034110069274902344
+in  seq.fc3 , prune feature number  30  with ncc  0.0396350622177124
+in  seq.fc3 , prune feature number  12  with ncc  0.041894495487213135
+in  seq.fc3 , prune feature number  0  with ncc  0.043766140937805176
+in  seq.fc3 , prune feature number  17  with ncc  0.055964648723602295
+in  seq.fc4 , prune feature number  8  with ncc  0.008653581142425537
+in  seq.fc4 , prune feature number  7  with ncc  0.059948623180389404
+in  seq.fc4 , prune feature number  1  with ncc  0.09041857719421387
+in  seq.fc4 , prune feature number  4  with ncc  0.11074614524841309
+in  seq.fc4 , prune feature number  6  with ncc  0.16866534948349
+in  seq.fc4 , prune feature number  9  with ncc  0.1768518090248108
+in  seq.fc4 , prune feature number  3  with ncc  0.18248283863067627
+Test set: Average loss: 0.9696, Accuracy: 6609/10000 (66%)
+change of test loss:  6.548018377084977
+
+
+ prune the  8  least important features for all layers at once
+
+in  seq.fc0 , prune feature number  20  with ncc  0.035796165466308594
+in  seq.fc0 , prune feature number  6  with ncc  0.13042479753494263
+in  seq.fc0 , prune feature number  25  with ncc  0.22953391075134277
+in  seq.fc0 , prune feature number  0  with ncc  0.2297995686531067
+in  seq.fc0 , prune feature number  30  with ncc  0.23973196744918823
+in  seq.fc0 , prune feature number  21  with ncc  0.26735198497772217
+in  seq.fc0 , prune feature number  29  with ncc  0.3374543786048889
+in  seq.fc0 , prune feature number  10  with ncc  0.3378235101699829
+in  seq.fc1 , prune feature number  30  with ncc  0.006273508071899414
+in  seq.fc1 , prune feature number  9  with ncc  0.014378249645233154
+in  seq.fc1 , prune feature number  3  with ncc  0.019400954246520996
+in  seq.fc1 , prune feature number  16  with ncc  0.030849754810333252
+in  seq.fc1 , prune feature number  23  with ncc  0.04372107982635498
+in  seq.fc1 , prune feature number  22  with ncc  0.05042785406112671
+in  seq.fc1 , prune feature number  31  with ncc  0.05383878946304321
+in  seq.fc1 , prune feature number  21  with ncc  0.05580192804336548
+in  seq.fc2 , prune feature number  19  with ncc  0.014101803302764893
+in  seq.fc2 , prune feature number  22  with ncc  0.0319247841835022
+in  seq.fc2 , prune feature number  23  with ncc  0.033717453479766846
+in  seq.fc2 , prune feature number  17  with ncc  0.036823928356170654
+in  seq.fc2 , prune feature number  30  with ncc  0.03944969177246094
+in  seq.fc2 , prune feature number  25  with ncc  0.039972901344299316
+in  seq.fc2 , prune feature number  18  with ncc  0.041834354400634766
+in  seq.fc2 , prune feature number  31  with ncc  0.04472196102142334
+in  seq.fc3 , prune feature number  9  with ncc  0.008314847946166992
+in  seq.fc3 , prune feature number  12  with ncc  0.013856291770935059
+in  seq.fc3 , prune feature number  30  with ncc  0.0466233491897583
+in  seq.fc3 , prune feature number  27  with ncc  0.04976856708526611
+in  seq.fc3 , prune feature number  17  with ncc  0.05167108774185181
+in  seq.fc3 , prune feature number  25  with ncc  0.05460059642791748
+in  seq.fc3 , prune feature number  31  with ncc  0.06874120235443115
+in  seq.fc3 , prune feature number  26  with ncc  0.0692521333694458
+in  seq.fc4 , prune feature number  8  with ncc  0.03482508659362793
+in  seq.fc4 , prune feature number  7  with ncc  0.057959675788879395
+in  seq.fc4 , prune feature number  1  with ncc  0.09375423192977905
+in  seq.fc4 , prune feature number  4  with ncc  0.1062006950378418
+in  seq.fc4 , prune feature number  6  with ncc  0.14811837673187256
+in  seq.fc4 , prune feature number  3  with ncc  0.1798006296157837
+in  seq.fc4 , prune feature number  9  with ncc  0.18426096439361572
+in  seq.fc4 , prune feature number  0  with ncc  0.21729731559753418
+Test set: Average loss: 0.8666, Accuracy: 6939/10000 (69%)
+change of test loss:  5.851902110858385
+
+
+ prune the  9  least important features for all layers at once
+
+in  seq.fc0 , prune feature number  20  with ncc  0.035796165466308594
+in  seq.fc0 , prune feature number  6  with ncc  0.13042479753494263
+in  seq.fc0 , prune feature number  25  with ncc  0.22953391075134277
+in  seq.fc0 , prune feature number  0  with ncc  0.2297995686531067
+in  seq.fc0 , prune feature number  30  with ncc  0.23973196744918823
+in  seq.fc0 , prune feature number  21  with ncc  0.26735198497772217
+in  seq.fc0 , prune feature number  29  with ncc  0.3374543786048889
+in  seq.fc0 , prune feature number  10  with ncc  0.3378235101699829
+in  seq.fc0 , prune feature number  11  with ncc  0.34057432413101196
+in  seq.fc1 , prune feature number  9  with ncc  0.00982522964477539
+in  seq.fc1 , prune feature number  30  with ncc  0.010870933532714844
+in  seq.fc1 , prune feature number  3  with ncc  0.024738729000091553
+in  seq.fc1 , prune feature number  31  with ncc  0.04562276601791382
+in  seq.fc1 , prune feature number  16  with ncc  0.046810805797576904
+in  seq.fc1 , prune feature number  23  with ncc  0.04692584276199341
+in  seq.fc1 , prune feature number  21  with ncc  0.057227492332458496
+in  seq.fc1 , prune feature number  27  with ncc  0.06072509288787842
+in  seq.fc1 , prune feature number  22  with ncc  0.08024448156356812
+in  seq.fc2 , prune feature number  19  with ncc  0.009588420391082764
+in  seq.fc2 , prune feature number  23  with ncc  0.03221750259399414
+in  seq.fc2 , prune feature number  22  with ncc  0.03296184539794922
+in  seq.fc2 , prune feature number  25  with ncc  0.03962147235870361
+in  seq.fc2 , prune feature number  24  with ncc  0.04426306486129761
+in  seq.fc2 , prune feature number  18  with ncc  0.04550415277481079
+in  seq.fc2 , prune feature number  31  with ncc  0.049592673778533936
+in  seq.fc2 , prune feature number  16  with ncc  0.05939227342605591
+in  seq.fc2 , prune feature number  21  with ncc  0.05949759483337402
+in  seq.fc3 , prune feature number  9  with ncc  0.0028921961784362793
+in  seq.fc3 , prune feature number  30  with ncc  0.03664839267730713
+in  seq.fc3 , prune feature number  17  with ncc  0.045706748962402344
+in  seq.fc3 , prune feature number  0  with ncc  0.04737842082977295
+in  seq.fc3 , prune feature number  27  with ncc  0.053025007247924805
+in  seq.fc3 , prune feature number  4  with ncc  0.05814605951309204
+in  seq.fc3 , prune feature number  25  with ncc  0.0635756254196167
+in  seq.fc3 , prune feature number  31  with ncc  0.0726425051689148
+in  seq.fc3 , prune feature number  13  with ncc  0.07476198673248291
+in  seq.fc4 , prune feature number  8  with ncc  0.0020183920860290527
+in  seq.fc4 , prune feature number  7  with ncc  0.07880473136901855
+in  seq.fc4 , prune feature number  1  with ncc  0.09769529104232788
+in  seq.fc4 , prune feature number  4  with ncc  0.11806875467300415
+in  seq.fc4 , prune feature number  6  with ncc  0.14082491397857666
+in  seq.fc4 , prune feature number  3  with ncc  0.16362875699996948
+in  seq.fc4 , prune feature number  5  with ncc  0.19576865434646606
+in  seq.fc4 , prune feature number  9  with ncc  0.20997482538223267
+in  seq.fc4 , prune feature number  0  with ncc  0.21173125505447388
+Test set: Average loss: 1.7198, Accuracy: 5026/10000 (50%)
+change of test loss:  11.613754695659107
+
+
+ prune the  10  least important features for all layers at once
+
+in  seq.fc0 , prune feature number  20  with ncc  0.035796165466308594
+in  seq.fc0 , prune feature number  6  with ncc  0.13042479753494263
+in  seq.fc0 , prune feature number  25  with ncc  0.22953391075134277
+in  seq.fc0 , prune feature number  0  with ncc  0.2297995686531067
+in  seq.fc0 , prune feature number  30  with ncc  0.23973196744918823
+in  seq.fc0 , prune feature number  21  with ncc  0.26735198497772217
+in  seq.fc0 , prune feature number  29  with ncc  0.3374543786048889
+in  seq.fc0 , prune feature number  10  with ncc  0.3378235101699829
+in  seq.fc0 , prune feature number  11  with ncc  0.34057432413101196
+in  seq.fc0 , prune feature number  7  with ncc  0.341693639755249
+in  seq.fc1 , prune feature number  9  with ncc  0.00790637731552124
+in  seq.fc1 , prune feature number  3  with ncc  0.03114902973175049
+in  seq.fc1 , prune feature number  23  with ncc  0.03944772481918335
+in  seq.fc1 , prune feature number  31  with ncc  0.041601717472076416
+in  seq.fc1 , prune feature number  30  with ncc  0.04345548152923584
+in  seq.fc1 , prune feature number  21  with ncc  0.056979596614837646
+in  seq.fc1 , prune feature number  27  with ncc  0.06096535921096802
+in  seq.fc1 , prune feature number  16  with ncc  0.06256592273712158
+in  seq.fc1 , prune feature number  6  with ncc  0.07463771104812622
+in  seq.fc1 , prune feature number  15  with ncc  0.08267003297805786
+in  seq.fc2 , prune feature number  19  with ncc  0.013527154922485352
+in  seq.fc2 , prune feature number  22  with ncc  0.022094547748565674
+in  seq.fc2 , prune feature number  23  with ncc  0.025156080722808838
+in  seq.fc2 , prune feature number  25  with ncc  0.03438645601272583
+in  seq.fc2 , prune feature number  24  with ncc  0.039245426654815674
+in  seq.fc2 , prune feature number  31  with ncc  0.05299729108810425
+in  seq.fc2 , prune feature number  11  with ncc  0.05345422029495239
+in  seq.fc2 , prune feature number  0  with ncc  0.05357253551483154
+in  seq.fc2 , prune feature number  21  with ncc  0.05928009748458862
+in  seq.fc2 , prune feature number  18  with ncc  0.059594810009002686
+in  seq.fc3 , prune feature number  9  with ncc  0.0009130239486694336
+in  seq.fc3 , prune feature number  30  with ncc  0.03567969799041748
+in  seq.fc3 , prune feature number  17  with ncc  0.03675353527069092
+in  seq.fc3 , prune feature number  25  with ncc  0.05151236057281494
+in  seq.fc3 , prune feature number  13  with ncc  0.05764061212539673
+in  seq.fc3 , prune feature number  0  with ncc  0.06362742185592651
+in  seq.fc3 , prune feature number  26  with ncc  0.07477819919586182
+in  seq.fc3 , prune feature number  3  with ncc  0.07799595594406128
+in  seq.fc3 , prune feature number  23  with ncc  0.0790373682975769
+in  seq.fc3 , prune feature number  10  with ncc  0.08217090368270874
+in  seq.fc4 , prune feature number  8  with ncc  0.02110499143600464
+in  seq.fc4 , prune feature number  7  with ncc  0.08495980501174927
+in  seq.fc4 , prune feature number  3  with ncc  0.10483020544052124
+in  seq.fc4 , prune feature number  1  with ncc  0.12241297960281372
+in  seq.fc4 , prune feature number  6  with ncc  0.12281918525695801
+in  seq.fc4 , prune feature number  4  with ncc  0.1625380516052246
+in  seq.fc4 , prune feature number  0  with ncc  0.17906785011291504
+in  seq.fc4 , prune feature number  5  with ncc  0.20671552419662476
+in  seq.fc4 , prune feature number  9  with ncc  0.21221989393234253
+in  seq.fc4 , prune feature number  2  with ncc  0.2371925711631775
+Test set: Average loss: 1.7816, Accuracy: 4515/10000 (45%)
+change of test loss:  12.031286897620346
+fc0
+20      20
+6       6
+25      23
+0       0
+30      26
+
+fc1
+30      3
+3       29
+9       28
+23      8
+29      21
+
+fc2
+24      30
+17      16
+19      16
+18      22
+16      17
+
+fc3
+31      27
+12      9
+0       11
+27      28
+9       23
+
+fc4
+8       8
+7       8
+1       8
+4       8
+6       8

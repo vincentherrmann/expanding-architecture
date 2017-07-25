@@ -5,6 +5,7 @@ from torch.nn import Parameter
 from torch.autograd import Variable, Function
 from scipy.stats import rankdata
 
+
 class MutatingModule(object):
     def __init__(self, *args, **kwargs):
         self.init_ncc()
@@ -169,7 +170,6 @@ class MutatingModule(object):
         self.t0_weight = remove_slice(self.t0_weight, dim=1, at_index=channel_number)
 
         return self.normalized_cross_correlation()
-
 
 
 class Conv1dExtendable(nn.Conv1d, MutatingModule):
