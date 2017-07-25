@@ -8,6 +8,8 @@ parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--epochs', default=20, type=int, help='training epochs')
 parser.add_argument('--lr', default=0.001, type=float, help='learning rate')
 parser.add_argument('--exp_itv', default=200, type=int, help='expand interval')
+parser.add_argument('--log_itv', default=400, type=int, help='tensorboard logging interval')
+parser.add_argument('--rep_itv', default=10, type=int, help='command line reporting interval')
 parser.add_argument('--exp_rate', default=4, type=int, help='expand rate')
 parser.add_argument('--pr_rate', default=0, type=int, help='prune rate')
 
@@ -24,7 +26,8 @@ if cuda:
 trainer = OptimizerCIFAR10(model,
                            epochs=args.epochs,
                            expand_interval=args.exp_itv,
-                           log_interval=400,
+                           log_interval=args.log_itv,
+                           report_interval=args.rep_itv,
                            expand_rate=args.exp_rate,
                            prune_rate=args.pr_rate,
                            lr=args.lr,
