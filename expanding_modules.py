@@ -133,9 +133,10 @@ class MutatingModule(object):
 
         # create split positions that scale down the largest weights and scale up the smallest
         duplicated_slice = original_weight[:, channel_number, :].clone()
-        ranks = torch.from_numpy(rankdata(torch.abs(duplicated_slice).numpy(), 'ordinal')).float() # rank by absolute value
+        ranks = torch.from_numpy(rankdata(torch.abs(duplicated_slice).cpu().numpy(), 'ordinal')).float() # rank by absolute value
         split_positions = ((len(ranks) - ranks.view_as(duplicated_slice)) / len(ranks)) * 2.5 #2.618
-        split_positions += torch.zeros(duplicated_slice.size()).uniform_(-0.1, 0.1).type_as(split_positions) # add noise
+        split_positions += torch.zeros(duplicated_slice.size()).uniform_(-0.1, 0.1) # add noise
+        split_positions = split_positions.type_as(duplicated_slice)
         # shuffle positive and negative split positions
         split_tensor = torch.stack([split_positions, (1-split_positions)], dim=0)
         noise_size = [1, self.out_channels]

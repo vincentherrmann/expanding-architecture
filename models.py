@@ -2,9 +2,6 @@ import torch
 from collections import OrderedDict
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.optim as optim
-import numpy as np
-import math as math
 from expanding_modules import Conv1dExtendable, Conv2dExtendable, Flatten2d1d, MutatingModule
 
 

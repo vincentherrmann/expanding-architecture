@@ -43,5 +43,6 @@ folder = "./experiments/CIFAR10/" + name
 logger=Logger(folder)
 trainer.logger = logger
 
+
 trainer.train()
 torch.save(model.state_dict(), folder + "/model_trained_for_" + str(trainer.epochs) + "_epochs")
