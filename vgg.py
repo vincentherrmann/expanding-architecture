@@ -5,7 +5,7 @@ import numpy as np
 from torch.autograd import Variable
 from collections import OrderedDict
 from models import SequentialNamed
-from expanding_modules import Conv1dExtendable, Conv2dExtendable, Flatten2d1d
+from expanding_modules import Conv1dExtendable, Conv2dExtendable, Flatten2d1d, SELU
 
 
 cfg = {
@@ -33,7 +33,7 @@ class VGG(nn.Module):
                                                                bias=True,
                                                                padding=1)),
                                 #("bn_" + l, nn.BatchNorm2d(x)),
-                                ("relu_" + l, nn.ReLU(inplace=True))]
+                                ("relu_" + l, nn.SELU(inplace=True))]
                 in_channels = x
                 layer += 1
 
