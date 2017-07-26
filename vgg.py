@@ -33,7 +33,7 @@ class VGG(nn.Module):
                                                                bias=True,
                                                                padding=1)),
                                 #("bn_" + l, nn.BatchNorm2d(x)),
-                                ("relu_" + l, nn.SELU(inplace=True))]
+                                ("relu_" + l, SELU(inplace=True))]
                 in_channels = x
                 layer += 1
 
