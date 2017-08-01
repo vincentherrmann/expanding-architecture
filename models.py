@@ -89,7 +89,7 @@ class Conv_Net(nn.Module):
                                                      bias=True,
                                                      fixed_feature_count=True)))
 
-            module_list.append(("relu", nn.ReLU(True)))
+            module_list.append(("relu", nn.PReLU(True)))
 
         module_list.append(("fc_drop", nn.Dropout()))
 

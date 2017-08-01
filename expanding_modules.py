@@ -26,7 +26,7 @@ class MutatingModule(object):
         t_norm = torch.norm(w, p=2, dim=1)
 
         # If there is only one input channel, no sensible ncc can be calculated, return instead the ratio of the norms
-        if self.in_channels == 1 & sum(self.kernel_size) == 1:
+        if self.in_channels == 1 and sum(self.kernel_size) == 1:
             ncc = w.squeeze() / torch.norm(t0_norm, 2)
             ncc = ncc - self.start_ncc
             self.current_ncc = ncc

@@ -9,15 +9,15 @@ from logger import Logger
 model = Conv_Net(conv=[1, 4, 4], fc=[4, 10])
 trainer = OptimizerMNIST(model,
                          epochs=20,
-                         expand_interval=100,
+                         expand_interval=200,
                          log_interval=400,
-                         expand_rate=1,
+                         expand_rate=4,
                          prune_rate=0,
-                         lr=0.0003,
+                         lr=0.01,
+                         momentum=0.9,
                          weight_decay=0)
 
-#name = str(model.layer_count) + "_layers_" + "_extend_" + str(trainer.extend_threshold) + "_prune_" + str(trainer.prune_threshold) + "_Adam"
-name = str(model.layer_count) + "_layers_" + "_expand_" + str(trainer.expand_rate) + "_prune_" + str(trainer.prune_rate) + "_interval_" + str(trainer.expand_interval) + "_lr_" + str(trainer.lr) + "_selu"
+name = str(model.layer_count) + "_layers_" + "_expand_" + str(trainer.expand_rate) + "_prune_" + str(trainer.prune_rate) + "_interval_" + str(trainer.expand_interval) + "_lr_" + str(trainer.lr) + "_mom_" + str(trainer.momentum) + "_sgd2Norm"
 folder = "./experiments/ConvNetExpansion/" + name
 
 logger=Logger(folder)

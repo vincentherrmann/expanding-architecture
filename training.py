@@ -10,6 +10,7 @@ from torchvision import datasets, transforms
 from torch.autograd import Variable
 from expanding_modules import Conv1dExtendable, Conv2dExtendable, MutatingModule
 from logger import Logger
+from optimizers import SGDNormalized
 
 
 class Expander:
@@ -227,8 +228,9 @@ class OptimizerMNIST(Expander):
                  prune_rate=0):
         super(OptimizerMNIST, self).__init__(model=model)
         self.epochs = epochs
-        self.optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+        #self.optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
         #self.optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
+        self.optimizer = SGDNormalized(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
         self.lr = lr
         self.momentum = momentum
         self.weight_decay = weight_decay
@@ -284,8 +286,8 @@ class OptimizerMNIST(Expander):
                 #                                                  prune_thr=self.prune_threshold)
                 self.prune_n_features(self.prune_rate)
                 self.expand_n_features(self.expand_rate)
-                self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
-
+                #self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+                self.optimizer = SGDNormalized(self.model.parameters(), lr=self.lr, momentum=self.momentum, weight_decay=self.weight_decay)
             self.optimizer.step()
 
             if idx % self.report_interval == 0:
