@@ -6,6 +6,17 @@ from torch.autograd import Variable, Function
 from scipy.stats import rankdata
 
 
+class ExpandableParameter(Parameter):
+    def __init__(self, *args, expandable_module=None, **kwargs):
+        Parameter.__init__(self, *args, **kwargs)
+        self.expandable_module = expandable_module
+
+    def __new__(cls, data=None, requires_grad=True, expandable_module=None):
+        p =  super(ExpandableParameter, cls).__new__(cls, data, requires_grad=requires_grad)
+        p.expandable_module = expandable_module
+        return p
+
+
 class MutatingModule(object):
     def __init__(self, *args, **kwargs):
         self.init_ncc()
@@ -18,7 +29,7 @@ class MutatingModule(object):
 
     def normalized_cross_correlation(self):
         w_0 = self.t0_weight.view(self.weight.size(0), -1)  # size: (G, F*J*K)
-        mean_0 = torch.mean(w_0, dim=1).expand_as(w_0)
+        mean_0 = torch.mean(w_0, dim=1).unsqueeze(1) #.expand_as(w_0)
         t0_factor = w_0 - mean_0
         t0_norm = torch.norm(w_0, p=2, dim=1)
 
@@ -32,7 +43,7 @@ class MutatingModule(object):
             self.current_ncc = ncc
             return ncc
 
-        mean = torch.mean(w, dim=1).expand_as(w)
+        mean = torch.mean(w, dim=1).unsqueeze(1) #.expand_as(w)
         t_factor = w - mean
         h_product = t0_factor * t_factor
         covariance = torch.sum(h_product, dim=1) #/ (w.size(1)-1)
@@ -58,9 +69,17 @@ class MutatingModule(object):
 
         new_ncc = self._split_output_channel(channel_number=feature_number)
         for dep in self.input_tied_modules:
+            print("input tied: ", dep)
             dep._split_input_channel(channel_number=feature_number)
+            if dep.in_channels != self.out_channels:
+                print("wrong number of in channels in", dep)
+                pass
         for dep in self.output_tied_modules:
+            print("output tied: ", dep)
             dep._split_output_channel(channel_number=feature_number)
+            if dep.out_channels != self.out_channels:
+                print("wrong number of out channels in", dep)
+                pass
 
         return new_ncc
 
@@ -93,9 +112,9 @@ class MutatingModule(object):
             original_bias = self.bias.data
             new_bias = insert_slice(original_bias, original_bias[channel_number:channel_number + 1], dim=0,
                                     at_index=channel_number + offset)
-            self.bias = Parameter(new_bias)
+            self.bias = ExpandableParameter(new_bias, expandable_module=self)
 
-        self.weight = Parameter(new_weight)
+        self.weight = ExpandableParameter(new_weight, expandable_module=self)
 
         # update persistent values
         self.t0_weight[channel_number, :] = self.weight.data[channel_number, :]
@@ -112,10 +131,11 @@ class MutatingModule(object):
     def _prune_output_channel(self, channel_number):
         self.out_channels -= 1
         new_weight = remove_slice(self.weight.data, dim=0, at_index=channel_number)
-        self.weight = Parameter(new_weight)
+        self.weight = ExpandableParameter(new_weight, expandable_module=self)
 
         if self.bias is not None:
-            self.bias = Parameter(remove_slice(self.bias.data, dim=0, at_index=channel_number))
+            self.bias = ExpandableParameter(remove_slice(self.bias.data, dim=0, at_index=channel_number),
+                                                 expandable_module=self)
 
         # update persistent values
         self.t0_weight = remove_slice(self.t0_weight, dim=0, at_index=channel_number)
@@ -145,8 +165,8 @@ class MutatingModule(object):
         if self.weight.data.is_cuda:
             noise_idx = noise_idx.cuda()
         #noise_idx = torch.ByteTensor(size=noise_size).bernoulli_(0.5).long()
-        split1 = torch.gather(split_tensor, dim=0, index=noise_idx)
-        split2 = torch.gather(split_tensor, dim=0, index=1-noise_idx)
+        split1 = torch.gather(split_tensor, dim=0, index=noise_idx).squeeze(0)
+        split2 = torch.gather(split_tensor, dim=0, index=1-noise_idx).squeeze(0)
 
         slice1 = duplicated_slice * split1
         slice2 = duplicated_slice * split2
@@ -156,7 +176,7 @@ class MutatingModule(object):
                                   dim=1,
                                   at_index=channel_number + offset)
 
-        self.weight = Parameter(new_weight)
+        self.weight = ExpandableParameter(new_weight, expandable_module=self)
 
         # update persistent values
         self.t0_weight[:, channel_number, :] = self.weight.data[:, channel_number, :]
@@ -167,12 +187,46 @@ class MutatingModule(object):
 
     def _prune_input_channel(self, channel_number):
         self.in_channels += -1
-        self.weight = Parameter(remove_slice(self.weight.data, dim=1, at_index=channel_number))
+        self.weight = ExpandableParameter(remove_slice(self.weight.data, dim=1, at_index=channel_number),
+                                          expandable_module=self)
 
         # update persistent values
         self.t0_weight = remove_slice(self.t0_weight, dim=1, at_index=channel_number)
 
         return self.normalized_cross_correlation()
+
+    def tie_input_to(self, modules):
+        self.back_ties.extend(modules)
+        back_ties = list(self.back_ties)
+        for back_tie in back_ties:
+            back_tie.input_tied_modules.append(self)
+
+    def tie_outputs(self, module):
+        input_ties = module.input_tied_modules + self.input_tied_modules
+        previous_ties = list(self.output_tied_modules)
+        new_ties = list(module.output_tied_modules)
+
+        # copy ties from module to all previous ties
+        for output_tie in previous_ties:
+            output_tie.output_tied_modules.extend(new_ties)
+            output_tie.output_tied_modules.append(module)
+            output_tie.input_tied_modules = list(input_ties)
+
+        # tie all ties from the new module to all previous ties
+        for output_tie in new_ties:
+            output_tie.output_tied_modules.extend(previous_ties)
+            output_tie.output_tied_modules.append(self)
+            output_tie.input_tied_modules = list(input_ties)
+
+        self.output_tied_modules.extend(new_ties)
+        module.output_tied_modules.extend(previous_ties)
+
+        self.output_tied_modules.append(module)
+        module.output_tied_modules.append(self)
+
+        self.input_tied_modules = list(input_ties)
+        module.input_tied_modules = list(input_ties)
+        pass
 
 
 class Conv1dExtendable(nn.Conv1d, MutatingModule):

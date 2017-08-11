@@ -9,8 +9,10 @@ import math as math
 from torchvision import datasets, transforms
 from torch.autograd import Variable
 from expanding_modules import Conv1dExtendable, Conv2dExtendable, MutatingModule
+from splitting_layers import Conv1dSplittable
 from logger import Logger
 from optimizers import SGDNormalized
+from graphs import make_graph, find_dependencies
 
 
 class Expander:
@@ -79,7 +81,7 @@ class Expander:
                     continue
 
                 this_val, this_idx = torch.max(torch.abs(module.current_ncc), 0) # extend most important features
-                #this_val, this_idx = torch.min(torch.abs(module.current_ncc), 0)  # extend most important features
+                #this_val, this_idx = torch.min(torch.abs(module.current_ncc), 0)  # extend least important features
                 #this_val, this_idx = torch.max(torch.rand(module.out_channels), 0) # extend random feature
                 if this_val[0] > max_val:
                 #if this_val[0] < max_val:
@@ -96,8 +98,27 @@ class Expander:
         #self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
         self.splitted_ncc_avg = ncc_avg / n
 
-    def expand_and_prune_with_thresholds(self, expand_thr, prune_thr):
+    def split_n_layers(self, n=1, feature_count=1):
+        if n == 0:
+            return
 
+        for _ in range(n):
+            max_ncc = 0
+            max_idx = 0
+            module_list = []
+
+            for idx, module in enumerate(self.model.modules()):
+                if isinstance(module, Conv1dSplittable):
+                    module_list.append(module)
+                    ncc = module.normalized_cross_correlation()
+                    sum = torch.sum(torch.abs(ncc))
+                    if sum > max_ncc:
+                        max_ncc = sum
+                        max_idx = idx
+
+            module_list[max_idx].split(feature_count=feature_count)
+
+    def expand_and_prune_with_thresholds(self, expand_thr, prune_thr):
         for name, module in self.model.named_modules():
             if isinstance(module, MutatingModule):
                 ncc = module.normalized_cross_correlation()
@@ -166,6 +187,30 @@ class Expander:
 
         return splitted
 
+    def split_layers_with_threshold(self, thresh, feature_count=4):
+        module_list = []
+
+        splitted = False
+
+        for idx, module in enumerate(self.model.modules()):
+            if isinstance(module, Conv1dSplittable):
+                module_list.append(module)
+                ncc = module.normalized_cross_correlation()
+                mean = torch.mean(torch.abs(ncc))
+                if mean > thresh:
+                    if module.first_split is not None:
+                        continue
+                    module.split(feature_count=feature_count)
+                    print("split layer, new model: ")
+                    self.model.print()
+                    splitted = True
+                    break
+                    #self.split_layers_with_threshold(thresh, feature_count)
+
+        if splitted:
+            self.split_layers_with_threshold(thresh, feature_count)
+
+
     def log_to_tensor_board(self, batch_idx, loss, correct_results, ncc_avg):
         if self.logger is None:
             return
@@ -224,6 +269,7 @@ class OptimizerMNIST(Expander):
                  weight_decay=0,
                  expand_threshold=0.01,
                  prune_threshold=0.0001,
+                 split_threshold=0.01,
                  expand_rate=0,
                  prune_rate=0):
         super(OptimizerMNIST, self).__init__(model=model)
@@ -240,6 +286,7 @@ class OptimizerMNIST(Expander):
         self.expand_interval = expand_interval
         self.expand_threshold = expand_threshold
         self.prune_threshold = prune_threshold
+        self.split_threshold = split_threshold
         self.expand_rate = expand_rate
         self.prune_rate = prune_rate
         self.train_loader = torch.utils.data.DataLoader(
@@ -266,6 +313,7 @@ class OptimizerMNIST(Expander):
     def _train_one_epoch(self, epoch):
         self.model.train()
         offset = int((epoch-1) * len(self.train_loader.dataset) / self.train_loader.batch_size)
+        dummy_input = Variable(torch.rand(28, 28))
         for batch_idx, (data, target) in enumerate(self.train_loader):
             idx = batch_idx + offset
             if self.cuda:
@@ -276,6 +324,8 @@ class OptimizerMNIST(Expander):
             loss = F.nll_loss(output, target)
             loss.backward()
 
+            self.optimizer.step()
+
             if self.log_interval != 0 and idx % self.log_interval == 0:
                 test_loss, test_correct = self.test()
                 self.log_to_tensor_board(idx, test_loss, test_correct, self.splitted_ncc_avg)
@@ -284,11 +334,20 @@ class OptimizerMNIST(Expander):
             if self.expand_interval!= 0 and idx % self.expand_interval == 0:
                 # splitted = self.expand_and_prune_with_thresholds(expand_thr=self.expand_threshold,
                 #                                                  prune_thr=self.prune_threshold)
+                self.split_layers_with_threshold(self.split_threshold, feature_count=4)
+                output = self.model(dummy_input)
+                find_dependencies(self.model, output)
                 self.prune_n_features(self.prune_rate)
                 self.expand_n_features(self.expand_rate)
+                self.model.print()
+                #self.model.tie_check()
+                #make_graph(output, list(self.model.parameters()))
+
+                #torch.sum(output).backward()
+
                 #self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+
                 self.optimizer = SGDNormalized(self.model.parameters(), lr=self.lr, momentum=self.momentum, weight_decay=self.weight_decay)
-            self.optimizer.step()
 
             if idx % self.report_interval == 0:
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
